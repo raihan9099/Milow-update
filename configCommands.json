@@ -30,6 +30,9 @@
   "envEvents": {
     "logsbot": {
       "allow": true
+    },
+    "groupAuthorization": {
+      "enable": true
     }
   }
 }
