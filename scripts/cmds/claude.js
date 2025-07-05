@@ -2,14 +2,14 @@ const axios = require("axios");
 
 module.exports = {
   config: {
-    name: "gpt",
-    aliases: ["gpt3", "chatgpt"],
+    name: "claude",
+    aliases: ["cld"],
     version: "1.0",
     author: "nexo_here",
-    shortDescription: "Ask GPT-3.5",
-    longDescription: "Send text or image to GPT-3.5 API and get a clean response.",
+    shortDescription: "Ask Claude 3 (Haiku)",
+    longDescription: "Send text or image to Claude 3 Haiku AI and get a clean response.",
     category: "ai",
-    guide: "{pn}gpt <your question> or reply to an image",
+    guide: "{pn}claude <your question> or reply to an image",
   },
 
   onStart: async function ({ api, event, args }) {
@@ -35,19 +35,19 @@ module.exports = {
       );
     }
 
-    const url = `https://kaiz-apis.gleeze.com/api/gpt-3.5?q=${encodeURIComponent(query)}&apikey=${apikey}`;
+    const url = `https://kaiz-apis.gleeze.com/api/claude3-haiku?ask=${encodeURIComponent(query)}&apikey=${apikey}`;
 
     try {
       const res = await axios.get(url);
       const responseText = res.data?.response;
       if (!responseText) {
-        return api.sendMessage("⚠️ No response from GPT API.", event.threadID, event.messageID);
+        return api.sendMessage("⚠️ No response from Claude API.", event.threadID, event.messageID);
       }
 
       return api.sendMessage(responseText, event.threadID, event.messageID);
     } catch (err) {
-      console.error("GPT API error:", err.message);
-      return api.sendMessage("❌ Failed to reach GPT API.", event.threadID, event.messageID);
+      console.error("Claude API error:", err.message);
+      return api.sendMessage("❌ Failed to reach Claude API.", event.threadID, event.messageID);
     }
   }
 };

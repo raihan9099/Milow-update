@@ -2,21 +2,21 @@ const axios = require("axios");
 
 module.exports = {
   config: {
-    name: "gpt",
-    aliases: ["gpt3", "chatgpt"],
+    name: "deepseek",
+    aliases: ["ds"],
     version: "1.0",
     author: "nexo_here",
-    shortDescription: "Ask GPT-3.5",
-    longDescription: "Send text or image to GPT-3.5 API and get a clean response.",
+    shortDescription: "Chat with DeepSeek AI (text or image)",
+    longDescription: "Send a question or image to DeepSeek v3 API and receive a clean AI response.",
     category: "ai",
-    guide: "{pn}gpt <your question> or reply to an image",
+    guide: "{pn}deepseek <your question> or reply to an image.",
   },
 
   onStart: async function ({ api, event, args }) {
     const apikey = "66e0cfbb-62b8-4829-90c7-c78cacc72ae2";
     let query;
 
-    // Handle image reply
+    // Check if replying to an image
     const reply = event.messageReply;
     if (
       reply &&
@@ -35,19 +35,19 @@ module.exports = {
       );
     }
 
-    const url = `https://kaiz-apis.gleeze.com/api/gpt-3.5?q=${encodeURIComponent(query)}&apikey=${apikey}`;
+    const url = `https://kaiz-apis.gleeze.com/api/deepseek-v3?ask=${encodeURIComponent(query)}&apikey=${apikey}`;
 
     try {
       const res = await axios.get(url);
       const responseText = res.data?.response;
       if (!responseText) {
-        return api.sendMessage("⚠️ No response from GPT API.", event.threadID, event.messageID);
+        return api.sendMessage("⚠️ No response received from DeepSeek.", event.threadID, event.messageID);
       }
 
       return api.sendMessage(responseText, event.threadID, event.messageID);
     } catch (err) {
-      console.error("GPT API error:", err.message);
-      return api.sendMessage("❌ Failed to reach GPT API.", event.threadID, event.messageID);
+      console.error("DeepSeek API Error:", err.message);
+      return api.sendMessage("❌ Failed to contact DeepSeek API.", event.threadID, event.messageID);
     }
   }
 };
