@@ -9,7 +9,7 @@ module.exports = {
   config: {
     name: "sing",
     version: "1.1",
-    role: 2,
+    role: 0,
     author: "nexo_here",
     category: "music",
     shortDescription: "Search and play SoundCloud songs",
