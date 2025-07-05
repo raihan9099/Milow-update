@@ -267,6 +267,15 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 			// —————  CHECK BANNED OR ONLY ADMIN BOX  ————— //
 			if (isBannedOrOnlyAdmin(userData, threadData, senderID, threadID, isGroup, commandName, message, langCode))
 				return;
+			
+			// —————  CHECK GROUP AUTHORIZATION  ————— //
+			if (isGroup && !config.adminBot.includes(senderID)) {
+				// Skip authorization check for approve command (admins only anyway)
+				if (commandName !== "approve" && threadData.data.groupApproved !== true) {
+					const unauthorizedMsg = "⚠️ This group is not authorized to use this bot. Please contact an admin for approval.";
+					return await message.reply(unauthorizedMsg);
+				}
+			}
 			if (!command) {
 				// ✅ Feature 3: Wrong Command Suggestion
 				// Suggest closest matching command using simple string similarity
