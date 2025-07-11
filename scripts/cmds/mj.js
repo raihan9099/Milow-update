@@ -1,7 +1,6 @@
 const axios = require("axios");
 const fs = require("fs-extra");
 const path = require("path");
-const { createCanvas, loadImage } = require("canvas");
 
 module.exports = {
   config: {
@@ -11,86 +10,81 @@ module.exports = {
     author: "nexo_here",
     countDown: 10,
     role: 0,
-    shortDescription: "Generate Midjourney style AI images",
-    longDescription: "Generate 4 grid image from Midjourney styled API and allow U/V image selection.",
+    shortDescription: "Generate image with Midjourney style",
+    longDescription: "AI image generator using Midjourney v4 with U1–U4 & V1–V4 features",
     category: "ai-image",
-    guide: "{pn} <prompt>"
+    guide: "{pn} <prompt>\nExample: {pn} A boy with wings"
   },
 
   onStart: async function ({ args, message, event, api }) {
     const prompt = args.join(" ");
-    if (!prompt) return message.reply("❌ Please provide a prompt.");
+    if (!prompt) return message.reply("❌ Please provide a prompt.\nExample: midjourney A lion with fire wings");
 
     api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
-    const url = `https://renzweb.onrender.com/api/mj-proxy-pub?prompt=${encodeURIComponent(prompt)}&usePolling=usePolling`;
-
     try {
-      const res = await axios.get(url);
-      const results = res.data?.results;
+      const res = await axios.get(`https://api.oculux.xyz/api/mj-4?prompt=${encodeURIComponent(prompt)}`);
+      const { output, actions, taskId } = res.data;
 
-      if (!Array.isArray(results) || results.length < 4) return message.reply("❌ Failed to generate 4 images.");
+      const filePath = path.join(__dirname, "cache", `${taskId}.jpg`);
+      const image = await axios.get(output, { responseType: "arraybuffer" });
+      fs.writeFileSync(filePath, Buffer.from(image.data, "binary"));
 
-      const imagePaths = [];
-      for (let i = 0; i < 4; i++) {
-        const imageResponse = await axios.get(results[i], { responseType: "arraybuffer" });
-        const fileName = `mj_${Date.now()}_${i}.jpg`;
-        const filePath = path.join(__dirname, "cache", fileName);
-        fs.writeFileSync(filePath, Buffer.from(imageResponse.data, "binary"));
-        imagePaths.push(filePath);
-      }
-
-      const canvas = createCanvas(1024, 1024);
-      const ctx = canvas.getContext("2d");
-      const imgs = await Promise.all(imagePaths.map(p => loadImage(p)));
-
-      ctx.drawImage(imgs[0], 0, 0, 512, 512);
-      ctx.drawImage(imgs[1], 512, 0, 512, 512);
-      ctx.drawImage(imgs[2], 0, 512, 512, 512);
-      ctx.drawImage(imgs[3], 512, 512, 512, 512);
-
-      const finalPath = path.join(__dirname, "cache", `mj_grid_${Date.now()}.jpg`);
-      fs.writeFileSync(finalPath, canvas.toBuffer("image/jpeg"));
+      const actionButtons = actions
+        .filter(btn => btn.label) // skip blank label
+        .map(action => `${action.label}`).join(" | ");
 
       message.reply({
-        attachment: fs.createReadStream(finalPath),
-        body: "Available actions\n[U1, U2, U3, U4]\n[V1, V2, V3, V4]"
-      }, (err, info) => {
+        body: `🖼️ Prompt: ${prompt}\n🆔 TaskID: ${taskId}\n\n🧩 Choose:\n[ ${actionButtons} ]\n\n📌 Reply with any of the above (U1–U4 or V1–V4)`,
+        attachment: fs.createReadStream(filePath)
+      }, async (err, info) => {
         if (err) return;
+
         global.GoatBot.onReply.set(info.messageID, {
-          commandName: this.config.name,
+          commandName: "midjourney",
           author: event.senderID,
-          images: imagePaths
+          taskId,
+          actions
         });
+
+        fs.unlinkSync(filePath);
         api.setMessageReaction("✅", event.messageID, () => {}, true);
       });
 
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error("MJ Error:", err.message);
       api.setMessageReaction("❌", event.messageID, () => {}, true);
-      message.reply("❌ Failed to generate image.");
+      message.reply("❌ Failed to generate image. Try again later.");
     }
   },
 
-  onReply: async function ({ event, Reply, api, message }) {
-    const { author, images } = Reply;
-    if (event.senderID !== author) return;
+  onReply: async function ({ event, message, Reply }) {
+    const { taskId, actions, author } = Reply;
 
-    const match = event.body.toUpperCase().match(/([UV])([1-4])/);
-    if (!match) return;
+    if (event.senderID !== author)
+      return message.reply("⚠️ Only the user who requested the image can reply.");
 
-    const index = parseInt(match[2]) - 1;
-    const selectedPath = images[index];
+    const choice = event.body.toUpperCase();
+    const validLabels = actions.map(btn => btn.label);
+    if (!validLabels.includes(choice))
+      return message.reply(`❌ Invalid option. Choose one of: ${validLabels.join(", ")}`);
 
-    if (!fs.existsSync(selectedPath)) {
-      return message.reply("❌ Image not found.");
+    const selected = actions.find(btn => btn.label === choice);
+    if (!selected) return message.reply("❌ Could not find the action URL.");
+
+    try {
+      const res = await axios.get(selected.url);
+      const imgUrl = res.data.output;
+      const img = await axios.get(imgUrl, { responseType: "arraybuffer" });
+      const filePath = path.join(__dirname, "cache", `${Date.now()}_mj.jpg`);
+      fs.writeFileSync(filePath, Buffer.from(img.data, "binary"));
+
+      message.reply({ attachment: fs.createReadStream(filePath) }, () => {
+        fs.unlinkSync(filePath);
+      });
+    } catch (err) {
+      console.error("MJ U/V Error:", err.message);
+      message.reply("❌ Failed to fetch variation or upscale image.");
     }
-
-    api.setMessageReaction("⏳", event.messageID, () => {}, true);
-    message.reply({ attachment: fs.createReadStream(selectedPath) }, () => {
-      api.setMessageReaction("✅", event.messageID, () => {}, true);
-      images.forEach(fp => fs.existsSync(fp) && fs.unlinkSync(fp));
-      global.GoatBot.onReply.delete(event.messageID);
-    });
   }
 };
