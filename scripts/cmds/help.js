@@ -32,7 +32,7 @@ module.exports = {
       game: "🎮",
       admin: "⚠️",
       rank: "📈",
-      box chat: "🦥",
+      boxchat: "🦥",
       others: "📁"
     };
 
