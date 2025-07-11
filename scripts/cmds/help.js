@@ -2,10 +2,10 @@ module.exports = {
   config: {
     name: "help",
     aliases: ["menu", "commands"],
-    version: "2.7",
+    version: "4.5",
     author: "nexo_here",
     shortDescription: "Show all available commands",
-    longDescription: "Display a categorized list of all available commands.",
+    longDescription: "Displays a clean and premium-styled categorized list of commands.",
     category: "system",
     guide: "{pn}help [command name]"
   },
@@ -13,6 +13,28 @@ module.exports = {
   onStart: async function ({ message, args, prefix }) {
     const allCommands = global.GoatBot.commands;
     const categories = {};
+
+    const emojiMap = {
+      ai: "🤖",
+      "ai-image": "🖼️",
+      group: "👥",
+      system: "⚙️",
+      fun: "🎉",
+      owner: "👑",
+      config: "🧩",
+      economy: "💰",
+      media: "🎬",
+      "18+": "🔞",
+      tools: "🧰",
+      utility: "📦",
+      info: "ℹ️", 
+      image: "🏜️",
+      game: "🎮",
+      admin: "⚠️",
+      rank: "📈",
+      box chat: "🦥",
+      others: "📁"
+    };
 
     const cleanCategoryName = (text) => {
       if (!text) return "others";
@@ -25,19 +47,17 @@ module.exports = {
     };
 
     for (const [name, cmd] of allCommands) {
-      const rawCat = cmd.config.category || "others";
-      const cat = cleanCategoryName(rawCat);
+      const cat = cleanCategoryName(cmd.config.category);
       if (!categories[cat]) categories[cat] = [];
       categories[cat].push(cmd.config.name);
     }
 
+    // Single command detail
     if (args[0]) {
       const query = args[0].toLowerCase();
       const cmd =
         allCommands.get(query) ||
-        [...allCommands.values()].find((c) =>
-          (c.config.aliases || []).includes(query)
-        );
+        [...allCommands.values()].find((c) => (c.config.aliases || []).includes(query));
       if (!cmd) return message.reply(`❌ Command "${query}" not found.`);
 
       const {
@@ -54,47 +74,42 @@ module.exports = {
       const desc =
         typeof longDescription === "string"
           ? longDescription
-          : longDescription?.en ||
-            (typeof shortDescription === "string"
-              ? shortDescription
-              : shortDescription?.en || "No description");
+          : longDescription?.en || shortDescription?.en || shortDescription || "No description";
 
       const usage =
         typeof guide === "string"
           ? guide.replace(/{pn}/g, prefix)
-          : guide?.en
-          ? guide.en.replace(/{pn}/g, prefix)
-          : `${prefix}${name}`;
+          : guide?.en?.replace(/{pn}/g, prefix) || `${prefix}${name}`;
 
       return message.reply(
-        `✨ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙄𝙣𝙛𝙤\n\n` +
-          `➥ Name: ${name}\n` +
-          `➥ Category: ${category || "Unknown"}\n` +
-          `➥ Description: ${desc}\n` +
-          `➥ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
-          `➥ Usage: ${usage}\n` +
-          `➥ Author: ${author || "Unknown"}\n` +
-          `➥ Version: ${version || "1.0"}`
+        `☠️ 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢 ☠️\n\n` +
+        `➥ Name: ${name}\n` +
+        `➥ Category: ${category || "Uncategorized"}\n` +
+        `➥ Description: ${desc}\n` +
+        `➥ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
+        `➥ Usage: ${usage}\n` +
+        `➥ Author: ${author || "Unknown"}\n` +
+        `➥ Version: ${version || "1.0"}`
       );
     }
 
     const formatCommands = (cmds) =>
       cmds
         .sort()
-        .map((cmd) => `°${cmd}`)
-        .join("  ");
+        .map((cmd) => `│ ∘ ${cmd}`)
+        .join("\n");
 
-    let msg = `❯  ❲ ☠️ ❳  𝙉𝙀𝙓𝙊𝘽𝙊𝙏 Command List\n━━━━━━━━━━━ ✕ ━━━━━━━━━\n\n`;
+    // Main command list
+    let msg = `╭━ 🎯 𝑵𝑬𝑿𝑶𝑩𝑶𝑻 𝑪𝑶𝑴𝑴𝑨𝑵𝑫𝑺 ━╮\n`;
 
-    const sortedCats = Object.keys(categories).sort();
-    for (const cat of sortedCats) {
-      msg += `『 ${cat.toUpperCase()} 』\n`;
-      msg += formatCommands(categories[cat]) + "\n\n";
+    const sortedCategories = Object.keys(categories).sort();
+    for (const cat of sortedCategories) {
+      const emoji = emojiMap[cat] || "📁";
+      msg += `\n${emoji} ${cat.toUpperCase()}\n`;
+      msg += `${formatCommands(categories[cat])}\n`;
     }
 
-    msg += `➥ Total Commands » ${allCommands.size}\n`;
-    msg += `➥ Use "${prefix}help [command name]" to get detailed info\n`;
-    msg += `━━━━━━━━━━━ ✕ ━━━━━━━━━`;
+    msg += `\n╰➤ Use: ${prefix}help [command name] for details`;
 
     return message.reply(msg);
   }
