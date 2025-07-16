@@ -3,7 +3,7 @@ module.exports = {
 	config: {
 		name: "approve",
 		version: "1.0",
-		author: "Assistant",
+		author: "nexo-here",
 		countDown: 5,
 		role: 2, // Only bot admin can use
 		description: "Approve a group to allow bot usage",
