@@ -18,7 +18,7 @@ module.exports = {
 			leftGroup: "Bot đã rời khỏi nhóm chưa được ủy quyền: %1 (TID: %2)"
 		},
 		en: {
-			unauthorizedGroup: "Your group is unauthorized. To get authorization, please join the support group at: https://m.me/j/AbZX5he4yIFsgui_/\nGroup TID: %1",
+			unauthorizedGroup: "Your group is unauthorized. To get authorization, please join the support group by +supportgc command!",
 			leftGroup: "Bot left unauthorized group: %1 (TID: %2)"
 		}
 	},
