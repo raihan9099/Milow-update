@@ -1,7 +1,6 @@
 module.exports = {
   config: {
-    name: "help",
-    aliases: ["menu", "commands"],
+    name: "tree",
     version: "4.5",
     author: "nexo_here",
     shortDescription: "Show all available commands",
@@ -88,7 +87,7 @@ module.exports = {
         `➥ Description: ${desc}\n` +
         `➥ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
         `➥ Usage: ${usage}\n` +
-        `➥ Author: ${author || "Unknown"}\n` +
+        `➥ Developer: Chitron Bhattacharya\n` +
         `➥ Version: ${version || "1.0"}`
       );
     }
