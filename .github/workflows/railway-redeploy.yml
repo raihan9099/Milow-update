@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: '0 0 */28 * *'  # Runs every 28 days
   workflow_dispatch:
-
 jobs:
   redeploy:
     runs-on: ubuntu-latest
