@@ -1,15 +1,14 @@
-module.exports = {
+ module.exports = {
   config: {
-    name: "tree",
-    version: "4.5",
-    author: "nexo_here",
-    shortDescription: "Show all available commands",
-    longDescription: "Displays a clean and premium-styled categorized list of commands.",
-    category: "system",
-    guide: "{pn}help [command name]"
+    name: "help",
+    version: "1.0",
+    author: "ChatGPT by Maisha's Janu 😉",
+    category: "info",
+    description: "Show commands by category in stylish box",
+    guide: "{pn} [page|command name]",
   },
 
-  onStart: async function ({ message, args, prefix }) {
+  onStart: async function({ message, args, prefix }) {
     const allCommands = global.GoatBot.commands;
     const categories = {};
 
@@ -26,32 +25,23 @@ module.exports = {
       "18+": "🔞",
       tools: "🧰",
       utility: "📦",
-      info: "ℹ️", 
+      info: "ℹ️",
       image: "🏜️",
       game: "🎮",
-      admin: "⚠️",
+      admin: "🛠️",
       rank: "📈",
       boxchat: "🦥",
-      others: "📁"
+      others: "📁",
     };
 
-    const cleanCategoryName = (text) => {
-      if (!text) return "others";
-      return text
-        .normalize("NFKD")
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-    };
-
-    for (const [name, cmd] of allCommands) {
-      const cat = cleanCategoryName(cmd.config.category);
+    // Group commands by category
+    for (const [, cmd] of allCommands) {
+      const cat = (cmd.config.category || "others").toLowerCase();
       if (!categories[cat]) categories[cat] = [];
       categories[cat].push(cmd.config.name);
     }
 
-    // Single command detail
+    // If user requests single command info
     if (args[0]) {
       const query = args[0].toLowerCase();
       const cmd =
@@ -59,21 +49,12 @@ module.exports = {
         [...allCommands.values()].find((c) => (c.config.aliases || []).includes(query));
       if (!cmd) return message.reply(`❌ Command "${query}" not found.`);
 
-      const {
-        name,
-        version,
-        author,
-        guide,
-        category,
-        shortDescription,
-        longDescription,
-        aliases
-      } = cmd.config;
+      const { name, description, guide, category, aliases, version, author } = cmd.config;
 
       const desc =
-        typeof longDescription === "string"
-          ? longDescription
-          : longDescription?.en || shortDescription?.en || shortDescription || "No description";
+        typeof description === "string"
+          ? description
+          : description?.en || "No description";
 
       const usage =
         typeof guide === "string"
@@ -81,35 +62,37 @@ module.exports = {
           : guide?.en?.replace(/{pn}/g, prefix) || `${prefix}${name}`;
 
       return message.reply(
-        `☠️ 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢 ☠️\n\n` +
-        `➥ Name: ${name}\n` +
-        `➥ Category: ${category || "Uncategorized"}\n` +
-        `➥ Description: ${desc}\n` +
-        `➥ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
-        `➥ Usage: ${usage}\n` +
-        `➥ Developer: Chitron Bhattacharya\n` +
-        `➥ Version: ${version || "1.0"}`
+        `📌 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢\n\n` +
+        `➤ Name: ${name}\n` +
+        `➤ Category: ${category || "Uncategorized"}\n` +
+        `➤ Description: ${desc}\n` +
+        `➤ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
+        `➤ Usage: ${usage}\n` +
+        `➤ Author: ${author || "Unknown"}\n` +
+        `➤ Version: ${version || "1.0"}`
       );
     }
 
+    // Format commands per category for main list
     const formatCommands = (cmds) =>
       cmds
         .sort()
-        .map((cmd) => `│ ∘ ${cmd}`)
+        .map((cmd) => `⚡ ${cmd}`)
         .join("\n");
 
-    // Main command list
-    let msg = `╭━ 🎯 𝑵𝑬𝑿𝑶𝑩𝑶𝑻 𝑪𝑶𝑴𝑴𝑨𝑵𝑫𝑺 ━╮\n`;
+    // Compose message with boxes
+    let msg = "";
 
-    const sortedCategories = Object.keys(categories).sort();
-    for (const cat of sortedCategories) {
+    for (const cat of Object.keys(categories).sort()) {
       const emoji = emojiMap[cat] || "📁";
-      msg += `\n${emoji} ${cat.toUpperCase()}\n`;
-      msg += `${formatCommands(categories[cat])}\n`;
+      msg += `┏━━━ ${emoji} 𝙈𝙚𝙣𝙪: ${capitalize(cat)} ━━━┓\n`;
+      msg += `${formatCommands(categories[cat])}\n\n`;
     }
 
-    msg += `\n╰➤ Use: ${prefix}help [command name] for details`;
-
-    return message.reply(msg);
-  }
+    return message.reply(msg.trim());
+  },
 };
+
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
