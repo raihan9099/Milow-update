@@ -22,8 +22,7 @@ module.exports = {
   onChat: async function ({ message, event }) {
     const body = event.body ? event.body.toLowerCase().trim() : "";
     if (["sweet", "compliment", "praise", "love"].includes(body)) {
-      const compliments = [
-        // ❤️ Sweet & Romantic (continued)
+      const compliments =
   "Tumi amar moner passport — tomar sathe jokhon thaki, shob jaiga khule jai! 🛂💕",
   "Tomar chul er komolotta dekhle amar moner shob jukti bhanga hoye jai! 🌿💖",
   "Tumi amar moner shonar taar — tomar kothay amar gaan bajey! 🎻💓",
@@ -34,8 +33,6 @@ module.exports = {
   "Tomar haas amar moner deep — chahate glow kore! 🕯️💖",
   "Tumi amar moner secret melody — shudhu tomay diye gaite chai! 🎼❤️",
   "Tomar sathe haat dhore cholar moto — shanti ar bhalobasha pawa jai! 👫✨",
-
-  // 😉 Flirty (continued)
   "Tumi jokhon hashao, amar brain automatic 'cute overload' mode e chole jay! 😍😉",
   "Tomar chokh amon — ami bhul hoye pori abar abar dekhte chai! 👀💓",
   "Tumi amar contact list er top — priority on! 📇😉",
@@ -46,8 +43,6 @@ module.exports = {
   "Tumi amar moner VIP seat — shudhu tomar jonno reserve! 🎟️😉",
   "Tomar chokher liner shundorota — ami ekdin copy korte chesta korbo! ✍️💓",
   "Tumi amar binge-watch partner — raat bhore tomake dekhte chai! 📺❤️",
-
-  // 🔥 Naughty but Safe (continued)
   "Tomar kotha mone porlei amar moner thermometer high hoye jai! 🌡️🔥",
   "Tomar haat dhorle mone hoy current choley jay — amar puro body tingling! ⚡😉",
   "Tumi amar night lamp — raat gulo tomar alo te gorom lage! 🛏️🔥",
@@ -57,9 +52,7 @@ module.exports = {
   "Tumi amar secret spice — chhoto kore ektu jhor kore dao! 🌶️😉",
   "Tomar chokh chhuye dile amar raat ondhokar theke alokito hoye jai! 🌙🔥",
   "Tumi amar moner heatwave — tomar kache thakle sob thanda ure jay! ☀️😉",
-  "Tomar kotha shune amar mon bhum bhumi hoye jai — lage tomar kachay fire ache! 🔥😏",
-
-  // 😂 Funny & Playful (continued)
+  "Tomar kotha shune amar mon bhum bhumi hoye jai — lage tomar kachay fire ache! 🔥😏"
   "Tumi amar moner WiFi name — 'Connected to Love'! 📶😂",
   "Tomar kache gele amar 'Do Not Disturb' mode automatic off hoye jai! 🔔🤣",
   "Tumi amar moner snack pack — shob shomoy ready! 🍿😆",
@@ -90,8 +83,6 @@ module.exports = {
   "Tomar chokh amar moner megher chhaya — thanda ar shital! ☁️💓",
   "Tumi amar moner bhorer shaluk ful — sada o shundor! 🌼💖",
   "Tomar kotha amar moner anondo mela! 🎡❤️",
-
-  // 😉 Flirty (continued)
   "Tumi amar moner selfie stick — shob moment capture korte chai! 📸😉",
   "Tomar chul amar moner pillow cover — shundor ar naram! 🛏️💘",
   "Tumi amar moner chocolate syrup — shob kichu tasty kore dao! 🍫😉",
@@ -112,8 +103,6 @@ module.exports = {
   "Tomar chokh amar moner ocean view — deep ar endless! 🌊💓",
   "Tumi amar moner cotton candy sky — shundor ar mishti! 🌅😉",
   "Tomar smile amar moner fairy tale ending! 📚❤️",
-
-  // 🔥 Naughty but Safe (continued)
   "Tumi amar moner molten chocolate cake — gorom ar melt kora! 🍫🔥",
   "Tomar kotha amar moner sauna session — gorom ar relax! 🧖‍♂️😉",
   "Tumi amar moner french toast — mishti ar crispy! 🍞🔥",
@@ -134,8 +123,6 @@ module.exports = {
   "Tomar chokh amar moner deep fryer — shob instant hot kore dai! 🍟🔥",
   "Tumi amar moner hot cocoa — ekdom cosy! ☕❤️",
   "Tomar haat amar moner heater switch — temperature uthe jai! 🔥😉",
-
-  // 😂 Funny & Playful (continued)
   "Tumi amar moner Netflix autoplay — ekbar suru hole thama jay na! 📺😂",
   "Tomar kotha amar moner meme generator — moja ar moja! 📸🤣",
   "Tumi amar moner weather app — shobshomoy bhalo forecast! 🌤️😉",
@@ -156,7 +143,6 @@ module.exports = {
   "Tomar chokh amar moner disco ball — shob dike light! 💃😂",
   "Tumi amar moner unlimited popcorn bucket — endless moja! 🍿😉",
   "Tomar smile amar moner magic trick — ekbar dekhe abar dekhte chai! 🎩❤️"
-const compliments = [
   // Sweet & Romantic ❤️
   "Tumi amar golper shobcheye shundor part! 💖",
   "Tomar chokh gulo dekhe mone hoy, ei duniya shudhu tomake niye! ✨",
@@ -184,7 +170,6 @@ const compliments = [
   "Tomar kache bosle moner antivirus automatic off hoye jai! 🛡️😆",
   "Tomar sathe bosle shomoy beshi taratari kete jai, jeno fast-forward hoye geche! ⏩",
   "Tumi amar moner selfie camera… shob shomoy shundor kore tulcho! 📸"
-const compliments = [
   // ❤️ Sweet & Romantic
   "Tumi amar golper shobcheye shundor part! 💖",
   "Tomar chokh gulo dekhe mone hoy, ei duniya shudhu tomake niye! ✨",
