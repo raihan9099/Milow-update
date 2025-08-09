@@ -1,11 +1,11 @@
  module.exports = {
   config: {
     name: "sweet",
-    aliases": ["love", "raihan) ]
+    aliases": ["love", "raihan" ]
   version: "1.1",
     author: "Raihan",
     role: 0,
-    countDown: 2,
+    countDown: 3,
     category: "fun",
     shortDescription: "Send a sweet compliment without prefix",
     longDescription: "Send a lovely compliment to brighten someone's day, triggers by typing compliment directly.",
