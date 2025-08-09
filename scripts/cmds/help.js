@@ -1,11 +1,12 @@
- module.exports = {
+module.exports = {
   config: {
     name: "help",
-    version: "1.0",
-    author: "ChatGPT by Maisha's Janu 😉",
-    category: "info",
-    description: "Show commands by category in stylish box",
-    guide: "{pn} [page|command name]",
+    version: "1.1",
+    author: "Raihan",
+    category: "system",
+    shortDescription: "Show command list",
+    longDescription: "Stylish categorized commands with deep aligned small command lists",
+    guide: "{pn}help [command name]",
   },
 
   onStart: async function({ message, args, prefix }) {
@@ -13,86 +14,75 @@
     const categories = {};
 
     const emojiMap = {
-      ai: "🤖",
-      "ai-image": "🖼️",
-      group: "👥",
-      system: "⚙️",
-      fun: "🎉",
-      owner: "👑",
-      config: "🧩",
-      economy: "💰",
-      media: "🎬",
-      "18+": "🔞",
-      tools: "🧰",
-      utility: "📦",
-      info: "ℹ️",
-      image: "🏜️",
-      game: "🎮",
       admin: "🛠️",
-      rank: "📈",
-      boxchat: "🦥",
+      fun: "🎮",
+      utility: "🌍",
+      system: "⚙️",
+      image: "🖼️",
+      boxchat: "📦",
+      owner: "👑",
+      ai: "🤖",
+      game: "🎲",
+      economy: "💰",
+      contact: "📞",
+      tools: "🧰",
       others: "📁",
     };
 
+    const cleanCategoryName = (text) => (text ? text.toLowerCase().trim() : "others");
+
     // Group commands by category
-    for (const [, cmd] of allCommands) {
-      const cat = (cmd.config.category || "others").toLowerCase();
+    for (const [name, cmd] of allCommands) {
+      const cat = cleanCategoryName(cmd.config.category);
       if (!categories[cat]) categories[cat] = [];
       categories[cat].push(cmd.config.name);
     }
 
-    // If user requests single command info
     if (args[0]) {
       const query = args[0].toLowerCase();
-      const cmd =
-        allCommands.get(query) ||
-        [...allCommands.values()].find((c) => (c.config.aliases || []).includes(query));
+      const cmd = allCommands.get(query) || [...allCommands.values()].find(c => (c.config.aliases || []).includes(query));
       if (!cmd) return message.reply(`❌ Command "${query}" not found.`);
 
-      const { name, description, guide, category, aliases, version, author } = cmd.config;
-
-      const desc =
-        typeof description === "string"
-          ? description
-          : description?.en || "No description";
-
-      const usage =
-        typeof guide === "string"
-          ? guide.replace(/{pn}/g, prefix)
-          : guide?.en?.replace(/{pn}/g, prefix) || `${prefix}${name}`;
+      const { name, version, author, guide, category, shortDescription } = cmd.config;
 
       return message.reply(
-        `📌 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢\n\n` +
-        `➤ Name: ${name}\n` +
-        `➤ Category: ${category || "Uncategorized"}\n` +
-        `➤ Description: ${desc}\n` +
-        `➤ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
-        `➤ Usage: ${usage}\n` +
-        `➤ Author: ${author || "Unknown"}\n` +
-        `➤ Version: ${version || "1.0"}`
+        `╭─⊙『  𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐈𝐍𝐅𝐎 』\n` +
+        `│✧ 𝐍𝐚𝐦𝐞: ${name}\n` +
+        `│✧ 𝐂𝐚𝐭𝐞𝐠𝐨𝐫𝐲: ${category || "Uncategorized"}\n` +
+        `│✧ 𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧: ${shortDescription || "No description"}\n` +
+        `│✧ 𝐔𝐬𝐚𝐠𝐞: ${typeof guide === "string" ? guide.replace(/{pn}/g, prefix) : `${prefix}${name}`}\n` +
+        `│✧ 𝐕𝐞𝐫𝐬𝐢𝐨𝐧: ${version || "1.0"}\n` +
+        `│✧ 𝐀𝐮𝐭𝐡𝐨𝐫: ${author || "Unknown"}\n` +
+        `╰────────────⊙`
       );
     }
 
-    // Format commands per category for main list
-    const formatCommands = (cmds) =>
-      cmds
-        .sort()
-        .map((cmd) => `⚡ ${cmd}`)
-        .join("\n");
+    // Format commands: if <= 4 cmds, vertical deep aligned else inline
+    const formatCommands = (cmds) => {
+      if (cmds.length <= 4) {
+        return cmds
+          .sort()
+          .map(cmd => `│  ✧ ${cmd}`)
+          .join("\n");
+      } else {
+        return cmds
+          .sort()
+          .map(cmd => `✧ ${cmd}`)
+          .join("  ");
+      }
+    };
 
-    // Compose message with boxes
     let msg = "";
 
     for (const cat of Object.keys(categories).sort()) {
-      const emoji = emojiMap[cat] || "📁";
-      msg += `┏━━━ ${emoji} 𝙈𝙚𝙣𝙪: ${capitalize(cat)} ━━━┓\n`;
-      msg += `${formatCommands(categories[cat])}\n\n`;
+      const emoji = emojiMap[cat] || emojiMap["others"];
+      msg += `╭━━━ ${emoji} 𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐘: ${cat.toUpperCase()} ━━━╮\n`;
+      msg += formatCommands(categories[cat]) + "\n";
+      msg += "╰────────────⊙\n\n";
     }
 
-    return message.reply(msg.trim());
-  },
-};
+    msg += `Use ${prefix}help [command name] for detailed info`;
 
-function capitalize(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
+    return message.reply(msg);
+  }
+};
