@@ -31,7 +31,7 @@ module.exports = {
                         defaultWelcomeMessage:
 `👋 Hello dear, {userNameTag}✨
 
- Welcome you to the chat group: 🪿🪽 {threadName} 🪿🪽
+ Welcome you to the chat group: [🪽{threadName}🪽]
 Have a nice noon 😊
 
 
