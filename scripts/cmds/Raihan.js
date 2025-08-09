@@ -1,31 +1,8 @@
  module.exports = {
   config: {
     name: "sweet",
-    aliases": [
-    "babe", "baby", "sweetie", "honey", "darling", "love", "lovey", "boo", "cutie", "sweetheart",
-    "angel", "princess", "prince", "queen", "king", "sunshine", "star", "beautiful", "handsome", "pretty",
-    "gorgeous", "sweetness", "sugar", "sugarplum", "cupcake", "cookie", "marshmallow", "pudding", "peach", "cherry",
-    "apple", "pumpkin", "muffin", "snugglebug", "cuddlebug", "teddy", "teddy bear", "bunny", "bunnyboo", "lovebug",
-    "sweetpea", "buttercup", "butterbean", "petal", "blossom", "flower", "rose", "daisy", "sunflower", "lily",
-    "orchid", "jewel", "diamond", "pearl", "treasure", "gem", "sapphire", "ruby", "emerald", "precious",
-    "doll", "babydoll", "angel face", "cutiepie", "honeybun", "sweety pie", "snugglebear", "pookie", "smoochie", "snookums",
-    "bubs", "bubba", "luv", "lovey dovey", "panda", "kitty", "kitten", "kittycat", "puppy", "puppy love",
-    "babycakes", "hotstuff", "hottie", "dreamboat", "stud", "handsome boy", "pretty girl", "babyboy", "babygirl", "soulmate",
-    "my love", "my heart", "my life", "my world", "my everything", "my star", "my light", "my darling", "my baby", "my honey",
-    "baby mine", "sugar lips", "kissy face", "love muffin", "bubbles", "snuggle muffin", "snuggle bear", "sugar bear", "love bear", "cuddle bear",
-    "cupcake queen", "cupcake king", "babe-a-licious", "snuggle monster", "cutie patootie", "angel eyes", "sparkle", "twinkle", "twinkle toes", "starlight",
-    "moonlight", "moonbeam", "moonpie", "strawberry", "peaches", "sweet cheeks", "honey cheeks", "kissy cheeks", "baby lips", "sugar lips",
-    "sweet lips", "kissy", "smooch", "smoochie pie", "sugar pie", "love pie", "cookie pie", "pumpkin pie", "butter pie", "snuggle pie",
-    "munchkin", "tiny", "shortcake", "angel cake", "love cake", "honey cake", "sweet cake", "sugar cake", "cupcake baby", "cupcake boo",
-    "cuddle cake", "pudding pop", "sugar pop", "love pop", "honey pop", "sweet pop", "darling pop", "cutie pop", "baby pop", "snuggle pop",
-    "dove", "love dove", "turtle dove", "sweet dove", "precious dove", "angel dove", "bunny dove", "kitty dove", "baby dove", "sugar dove",
-    "dearest", "beloved", "sweet beloved", "darling beloved", "honey beloved", "love beloved", "precious beloved", "baby beloved", "cutie beloved", "sweetie beloved",
-    "snuggle beloved", "pookie bear", "love bunny", "sweet bunny", "sugar bunny", "cuddle bunny", "honey bunny", "darling bunny", "baby bunny", "angel bunny",
-    "pumpkin bunny", "chocolate", "sweet chocolate", "sugar chocolate", "honey chocolate", "darling chocolate", "love chocolate", "precious chocolate", "baby chocolate", "cutie chocolate",
-    "butter bunny", "cuddle muffin", "snuggle puff", "love puff", "honey puff", "sugar puff", "sweet puff", "darling puff", "baby puff", "angel puff"
-  ]
-}
-    version: "1.1",
+    aliases": ["love", "raihan) ]
+  version: "1.1",
     author: "Raihan",
     role: 0,
     countDown: 2,
