@@ -1,4 +1,4 @@
--cmd install sweet.js module.exports = {
+ module.exports = {
   config: {
     name: "sweet",
     aliases": [
