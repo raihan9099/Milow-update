@@ -32,8 +32,6 @@ module.exports = {
 `👋 Hello dear, {userNameTag}✨
 
  Welcome you to the chat group: [🪽{threadName}🪽]
-Have a nice noon 😊
-
 
 🌻🤍 Have a nice {session}!`
                 }
