@@ -1,7 +1,10 @@
 module.exports = {
   config: {
     name: "sweet",
-    aliases: ["compliment", "praise", "love"],
+    aliases: ["shona", "jaan", "mon", "priyo", "pakhi", "meherin",
+    "shimu", "gulabo", "laila", "romi", "toni", "dudu", "mimi", "lolo", "ratna", "priti",
+    "amor", "tumi", "darling", "love", "sunshine", "starlight", "angel", "cutie", "treasure", "beloved",
+    "sweety", "chotto", "mone", "ghumer", "ridoy", "chhobi", "mosh", "goru", "goat", "goatie", "compliment", "praise", "love"],
     version: "2.0",
     author: "Raihan",
     role: 0,
