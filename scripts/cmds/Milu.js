@@ -1,10 +1,10 @@
-const axios = require('axios');
+ const axios = require('axios');
 
 const baseApiUrl = () => "https://www.noobs-api.rf.gd/dipto";
 
 module.exports.config = {
-  name: "milu",
-  aliases: ["milow", "bbe", "bot", "nobita", "hi"],
+  name: "bby",
+  aliases: ["baby", "bbe", "bot", "chitron", "babe"],
   version: "7.0.0",
   author: "Chitron Bhattacharjee",
   countDown: 0,
@@ -17,8 +17,8 @@ module.exports.config = {
 };
 
 const randomReplies = [
-  "Hey,how may i help 👀?",
-  "😏 Shobai ghumai gese... amra dui jon jaagum naki?",
+  "hey how may i help 👀? ",
+  "Ajke rat ta boro tai, tmr uchit amk valobasa 😼🖤",
   "💋 Chander alo te tor mukh dekhle mon hoy chori kore niye jai.",
   "👀 Raat bhor porjonto kotha bolum... tui sambhalte parbi to?",
   "🔥 Ei shanto raate tui amar mathar shanti uraisha disos.",
@@ -187,4 +187,4 @@ module.exports.onChat = async ({ api, event }) => {
   } catch (err) {
     api.sendMessage(`Error: ${err.message}`, event.threadID, event.messageID);
   }
-};
+};. 
