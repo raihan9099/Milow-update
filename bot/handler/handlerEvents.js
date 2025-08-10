@@ -272,7 +272,7 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 			if (isGroup && !config.adminBot.includes(senderID)) {
 				// Skip authorization check for approve command (admins only anyway)
 				if (commandName !== "approve" && threadData.data.groupApproved !== true) {
-					const unauthorizedMsg = "⚠️ This group is not authorized to use this bot. /n please Inbox admin  https://m.me/hydrocarbonn/\n\n and get approval from admin.";
+					const unauthorizedMsg = "⚠️ This group is not authorized to use this bot. /n please contact admin  https://m.me/hydrocarbonn/ /n and get approval from admin ◑.";
 					return await message.reply(unauthorizedMsg);
 				}
 			}
