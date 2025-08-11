@@ -1,4 +1,4 @@
-.cmd install const axios = require('axios');
+const axios = require('axios');
 
 const baseApiUrl = () => "https://www.noobs-api.rf.gd/dipto";
 
