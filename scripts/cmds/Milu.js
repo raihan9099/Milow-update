@@ -17,10 +17,10 @@ module.exports.config = {
 };
 
 const randomReplies = [
-  "🌙 Ei raatt ta baareee lomba... tui ar ami ki korum bol?",
-  "😏 Shobai ghumai gese... amra dui jon jaagum naki?",
+  "🌙 Yes dear, How may i help you?",
+  "hae bolo, kisu bolba🫣? ",
   "💋 Chander alo te tor mukh dekhle mon hoy chori kore niye jai.",
-  "👀 Raat bhor porjonto kotha bolum... tui sambhalte parbi to?",
+  "👀 Raite kotha hobe, ami tmk raite valobashi Priyo 😌",
   "🔥 Ei shanto raate tui amar mathar shanti uraisha disos.",
   "😉 Raat mane churi... tui churi koira amar mon niye gesos.",
   "💤 Ghum asilo... kintu tui msg disos, shob ure gese.",
