@@ -45,9 +45,9 @@
   "credentials": {
     "gmailAccount": {
       "email": "botofnexxo@gmail.com",
-      "clientId": "848792512039-g3mlfd39p9ttu82ga4kahk6kadjr0hcp.apps.googleusercontent.com",
-      "clientSecret": "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",
-      "refreshToken": "1//04nBMNYnfbedsCgYIARAAGAQSNwF-L9IrmyZIKKZaDmN9aqXhIuO1wxk2jpkXPf3zuL_KN-IU99BNhW7eUGCFrDr0hJetNkBFExg",
+      "clientId": "707976531024-j0h1m1r5lld2ck2eb0iss8pet8fkiu2g.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "refreshToken": "1//0435VRKIR84KGCgYIARAAGAQSNwF-L9Irq-ndiTGzeY_17lETxH8ccgdXPLS8t9G3WDzioOirdR6kJXEdszdv3O1KFVoHv1r-l_U",
       "apiKey": ""
     },
     "gRecaptcha": {
