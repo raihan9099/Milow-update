@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const getAPIBase = async () => {
   const { data } = await axios.get(
-    "https://www.noobs-api.rf.gd/dipto"
+    "https://raw.githubusercontent.com/EwrShAn25/ShAn.s-Api/refs/heads/main/Api.json"
   );
   return data.shan;
 };
