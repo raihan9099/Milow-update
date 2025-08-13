@@ -1,3 +1,15 @@
+const fs = require("fs");
+const path = require("path");
+const wlFile = path.join(__dirname, "../whitelist.json"); // adjust path according to your file structure
+
+function isWL(uid) {
+  if (!fs.existsSync(wlFile)) return false;
+  const data = JSON.parse(fs.readFileSync(wlFile));
+  return data.includes(uid);
+}
+
+// Inside your main event handler, very top:
+if (!isWL(event.senderID)) return; // ❌ Block everything for non-whitelist users
 const fs = require("fs-extra");
 const nullAndUndefined = [undefined, null];
 // const { config } = global.GoatBot;
