@@ -30,10 +30,13 @@ Enjoy your time in the group! 🌈✨
                         multiple1: "আপনি",
                         multiple2: "আপনারা",
                         defaultWelcomeMessage:
-`👋 Hello dear, {userNameTag}✨
+`👋 Hello dear, {userNameTag} Welcome ✨
 
- Welcome you to the chat group: [🪽{threadName}🪽]
+🌟 you just joined the chat ✵ Group ▸ : [{threadName}]
 
+✵ Hope you're having a great afternoon!
+
+🔔 Tip: Introduce yourself or try a command to explore what I can do • remember, great conversations start with a hello!
 🌻🤍 Have a nice {session}!`
                 }
         },
