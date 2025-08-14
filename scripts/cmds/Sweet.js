@@ -20,13 +20,13 @@ module.exports = {
 
   onChat: async function ({ message, event }) {
     const body = event.body ? event.body.toLowerCase().trim() : "";
-    if (["sweet", "bot", "love"].includes(body)) {
+    if (["hi", "bot", "love"].includes(body)) {
       const compliments = [
         "Tumi shobcheye shundor manush je ami jani! 💖",
         "Tomar hashir moto ami kokhono khub misti dekhi nai! 😊",
         "Tomar sathe kotha bole amar din ta shundor hoye jai! 🌸",
         "Tumi amar life er best part! ❤️",
-        "Tumar choshma pore dekhte onek classy! 😎",
+        "Tumake choshma pore dekhte onek classy! 😎",
         "Tomar mon khub bhalo, shetai amar posondo! 🥰",
         "Tumi jodi amar kache thako, ami khushi thakbo protidin! 💫",
         "Tumi onek talented, shopno dekhte theke ektu agiye thako! 🌟",
@@ -70,7 +70,6 @@ module.exports = {
         "𝐀𝐣𝐛 𝐭𝐨__😒",
         "𝐀𝐦𝐚𝐤𝐞 𝐝𝐞𝐤𝐨 𝐧𝐚,𝐚𝐦𝐢 𝐛𝐚𝐲𝐚𝐬𝐭 𝐚𝐬𝐢🙆🏻‍♀",
         "𝐁𝐛𝘆 𝐛𝐨𝐥𝐥𝐞 𝐜𝐡𝐚𝐤𝐫𝐢 𝐭𝐡𝐚𝐤𝐛𝐞 𝐧𝐚",
-        "𝐁𝐛𝘆 𝐁𝐛𝐲 𝐧𝐚 𝐤𝐨𝐫𝐞 𝐚𝐦𝐚𝐫 𝐛𝐨𝐬 𝐦𝐚𝐧𝐞, 𝐌𝐚𝐡𝐌𝐔𝐃 ,𝐌𝐚𝐡𝐌𝐔𝐃 𝐨 𝐭𝐨 𝐤𝐨𝐫𝐭𝐞 𝐩𝐚𝐫𝐨😑?",
         "𝐀𝐦𝐚𝐫 𝐬𝐨𝐧𝐚𝐫 𝐁𝐚𝐧𝐠𝐥𝐚, 𝐭𝐚𝐫𝐩𝐨𝐫𝐞 𝐥𝐚𝐢𝐧 𝐤𝐢? 🙈",
         "🍺 𝐄𝐢 𝐧𝐚𝐨 𝐣𝐮𝐬 𝐤𝐡𝐚𝐨..!𝐁𝐛𝘆 𝐛𝐨𝐥𝐭𝐞 𝐛𝐨𝐥𝐭𝐞 𝐡𝐚𝐩𝐚𝐲 𝐠𝐞𝐜𝐡𝐨 𝐧𝐚 🥲",
         "𝐇𝐨𝐭𝐚𝐭 𝐚𝐦𝐚𝐤𝐞 𝐦𝐨𝐧𝐞 𝐩𝐨𝐫𝐞𝐥𝐨 🙄",
