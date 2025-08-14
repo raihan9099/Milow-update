@@ -17,14 +17,15 @@ module.exports = {
                         session3: "Evening",
                         session4: "Night",
                         welcomeMessage: `
-╔❀✿❀═❀✿❀═❀✿❀╗  
-🌸✨ 𝙃𝙞 𝙣𝙮𝙖~! ✨🌸
-💖 𝕋𝕙𝕒𝕟𝕜𝕤 𝕗𝕠𝕣 𝕚𝕟𝕧𝕚𝕥𝕚𝕟𝕘 𝕞𝕖 𝕥𝕠 𝕪𝕠𝕦𝕣 𝕔𝕦𝕥𝕖 𝕘𝕣𝕠𝕦𝕡! 💖
+🤖 Thank you Baby for inviting me! 🌟
+🚀 Let's get started! Here's some useful information:
 
-🐰🎀 𝙋𝙧𝙚𝙛𝙞𝙭: %1
+- prefix: %1
 
-🌻 𝙏𝙮𝙥𝙚 𝙣𝙮𝙖 %1help 𝙩𝙤 𝙨𝙚𝙚 𝙖𝙡𝙡 𝙩𝙝𝙚 𝙘𝙤𝙢𝙢𝙖𝙣𝙙𝙨! ʕ•ᴥ•ʔ💫  
-╚❀✿❀═❀✿❀═❀✿❀╝
+- To discover the list of available commands, type: !help
+📚 Need assistance or have questions?
+Feel free to reach out admins anytime. 
+Enjoy your time in the group! 🌈✨
 `,
                         multiple1: "আপনি",
                         multiple2: "আপনারা",
