@@ -220,12 +220,12 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 			// Check if message is just the prefix with no command
 			if (body.trim() === prefix.trim()) {
 				const prefixOnlyResponses = [
-					"That's just my prefix. Try /help to see all available commands",
-					"Try a command like /help",
-					"Looking for something? Try /gpt",
-					"Need help? Use /help for commands!",
-					"This is my prefix only, try /hgen",
-					"Just the prefix won't do! Try /help",
+					"That's just my prefix. Try -help to see all available commands",
+					"Try a command like -help",
+					"Looking for something? Try -gpt",
+					"Need help? Use -help for commands!",
+					"This is my prefix only, try -hgen",
+					"Just the prefix won't do! Try -help",
 					"⚠️ Add a command after the prefix!"
 				];
 				const randomResponse = prefixOnlyResponses[Math.floor(Math.random() * prefixOnlyResponses.length)];
