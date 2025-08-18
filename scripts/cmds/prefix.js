@@ -133,7 +133,7 @@ module.exports = {
 ꫝ. ⏰ Time: ${currentTime}
 ꫝ. ⏳ Uptime: ${uptime}
 ꫝ. 👤 Your ID: ${event.senderID}
-ꫝ. ✍️ Dev: m፝֟ꫝƦᏌꘘツ모
+ꫝ. ✍️ Dev: RaiHanツ모
 ➤➤➤➤➤➤➤➤➤➤➤➤➤`,
         attachment: await utils.getStreamFromURL("https://drive.google.com/uc?export=view&id=1LWrlzPLaClLNLZjsJMR46lmADae9CPdY")
       });
