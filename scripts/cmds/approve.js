@@ -1,18 +1,31 @@
+
 module.exports = {
 	config: {
 		name: "approve",
-		version: "1.4",
-		author: "Raihan_milows",
+		version: "1.0",
+		author: "modified by raihan",
 		countDown: 5,
-		role: 2, // Admin-only for approve/remove/list
-		description: "Approve a group, get thread ID, contact admin, or info check",
+		role: 2, // Only bot admin can use
+		description: "Approve a group to allow bot usage",
 		category: "admin",
 		guide: {
-			en: "{pn} <threadID> - Approve a group by its thread ID\n{pn} list - Show all approved groups\n{pn} remove <threadID> - Remove approval from a group\n{pn} getid - Get this group's thread ID (everyone)\n{pn} callad - Contact the bot admin (everyone)\n{pn} info - Check if group is approved (everyone)"
+			en: "{pn} <threadID> - Approve a group by its thread ID\n{pn} list - Show all approved groups\n{pn} remove <threadID> - Remove approval from a group"
 		}
 	},
 
 	langs: {
+		vi: {
+			missingThreadId: "⚠️ Vui lòng cung cấp ID nhóm để phê duyệt.",
+			invalidThreadId: "⚠️ ID nhóm không hợp lệ.",
+			groupApproved: "✅ Nhóm đã được phê duyệt thành công!\n📝 Tên nhóm: %1\n🆔 Thread ID: %2",
+			groupAlreadyApproved: "⚠️ Nhóm này đã được phê duyệt trước đó.",
+			approvalRemoved: "✅ Đã gỡ phê duyệt nhóm: %1 (%2)",
+			groupNotApproved: "⚠️ Nhóm này chưa được phê duyệt.",
+			approvedGroupsList: "📋 Danh sách nhóm đã phê duyệt:\n\n%1",
+			noApprovedGroups: "📋 Chưa có nhóm nào được phê duyệt.",
+			errorGettingGroupInfo: "❌ Không thể lấy thông tin nhóm. ID có thể không hợp lệ.",
+			invalidSubcommand: "⚠️ Lệnh con không hợp lệ. Sử dụng: approve <threadID>, approve list, hoặc approve remove <threadID>"
+		},
 		en: {
 			missingThreadId: "⚠️ Please provide a thread ID to approve.",
 			invalidThreadId: "⚠️ Invalid thread ID.",
@@ -23,59 +36,32 @@ module.exports = {
 			approvedGroupsList: "📋 List of approved groups:\n\n%1",
 			noApprovedGroups: "📋 No groups have been approved yet.",
 			errorGettingGroupInfo: "❌ Could not get group information. Thread ID may be invalid.",
-			invalidSubcommand: "⚠️ Invalid subcommand. Use: approve <threadID>, approve list, approve remove <threadID>, getid, callad, or info",
-			threadId: "🆔 Thread ID of this group: %1",
-			contactAdmin: "📞 You can contact the bot admin here: [Click Here](https://m.me/hydrocarbonn)",
-			notApproved: "⚠️ *Your group is not approved!*\n\n📌 Please contact the admin using the command: `callad`\n💬 Or send a message directly via Messenger: [Click here](https://m.me/hydrocarbonn)\n\nThank you!"
+			invalidSubcommand: "⚠️ Invalid subcommand. Use: approve <threadID>, approve list, or approve remove <threadID>"
 		}
 	},
 
 	onStart: async function ({ message, args, threadsData, api, getLang }) {
-		const subcommand = args[0]?.toLowerCase();
-
-		if (!subcommand) return message.reply(getLang("missingThreadId"));
-
-		// === Everyone commands ===
-		if (subcommand === "getid") {
-			return message.reply(getLang("threadId", message.threadID));
-		}
-
-		if (subcommand === "callad") {
-			return message.reply(getLang("contactAdmin"));
-		}
-
-		if (subcommand === "info") {
-			try {
-				const threadID = message.threadID;
-				const threadData = await threadsData.get(threadID);
-
-				if (!threadData?.data?.groupApproved) {
-					return message.reply(getLang("notApproved"));
-				} else {
-					return message.reply("✅ This group is approved. You can use all bot features.");
-				}
-			} catch (err) {
-				console.error("Error checking group approval:", err);
-				return message.reply("❌ Could not check group approval status.");
-			}
-		}
-
-		// === Admin-only commands ===
-		if (["list", "remove"].includes(subcommand) || !isNaN(subcommand)) {
-			if (message.senderID !== api.getCurrentUserID()) return; // Admin check
+		const subcommand = args[0];
+		
+		if (!subcommand) {
+			return message.reply(getLang("missingThreadId"));
 		}
 
 		// List approved groups
-		if (subcommand === "list") {
+		if (subcommand.toLowerCase() === "list") {
 			try {
 				const allThreads = await threadsData.getAll();
 				const approvedGroups = allThreads.filter(thread => thread.data.groupApproved === true);
+				
+				if (approvedGroups.length === 0) {
+					return message.reply(getLang("noApprovedGroups"));
+				}
 
-				if (approvedGroups.length === 0) return message.reply(getLang("noApprovedGroups"));
-
-				const groupsList = approvedGroups
-					.map((thread, i) => `${i + 1}. ${thread.threadName || "Unknown"} (${thread.threadID})`)
-					.join("\n");
+				let groupsList = "";
+				for (let i = 0; i < approvedGroups.length; i++) {
+					const thread = approvedGroups[i];
+					groupsList += `${i + 1}. ${thread.threadName || "Unknown"} (${thread.threadID})\n`;
+				}
 
 				return message.reply(getLang("approvedGroupsList", groupsList));
 			} catch (err) {
@@ -85,13 +71,17 @@ module.exports = {
 		}
 
 		// Remove approval
-		if (subcommand === "remove") {
+		if (subcommand.toLowerCase() === "remove") {
 			const threadID = args[1];
-			if (!threadID || isNaN(threadID)) return message.reply(getLang("invalidThreadId"));
+			if (!threadID || isNaN(threadID)) {
+				return message.reply(getLang("invalidThreadId"));
+			}
 
 			try {
 				const threadData = await threadsData.get(threadID);
-				if (!threadData.data.groupApproved) return message.reply(getLang("groupNotApproved"));
+				if (!threadData.data.groupApproved) {
+					return message.reply(getLang("groupNotApproved"));
+				}
 
 				await threadsData.set(threadID, false, "data.groupApproved");
 				return message.reply(getLang("approvalRemoved", threadData.threadName || "Unknown", threadID));
@@ -103,25 +93,33 @@ module.exports = {
 
 		// Approve group
 		const threadID = subcommand;
-		if (isNaN(threadID)) return message.reply(getLang("invalidThreadId"));
+		if (isNaN(threadID)) {
+			return message.reply(getLang("invalidThreadId"));
+		}
 
 		try {
+			// Get or create thread data
 			let threadData;
 			try {
 				threadData = await threadsData.get(threadID);
-			} catch {
+			} catch (err) {
+				// If thread doesn't exist in database, try to get info from Facebook
 				try {
 					const threadInfo = await api.getThreadInfo(threadID);
 					threadData = await threadsData.create(threadID, threadInfo);
-				} catch {
+				} catch (createErr) {
 					return message.reply(getLang("errorGettingGroupInfo"));
 				}
 			}
 
-			if (threadData.data.groupApproved === true) return message.reply(getLang("groupAlreadyApproved"));
+			// Check if already approved
+			if (threadData.data.groupApproved === true) {
+				return message.reply(getLang("groupAlreadyApproved"));
+			}
 
+			// Approve the group
 			await threadsData.set(threadID, true, "data.groupApproved");
-
+			
 			return message.reply(getLang("groupApproved", threadData.threadName || "Unknown", threadID));
 		} catch (err) {
 			console.error("Error approving group:", err);
