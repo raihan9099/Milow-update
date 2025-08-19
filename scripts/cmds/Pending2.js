@@ -2,7 +2,7 @@ module.exports = {
  config: {
  name: "pending",
  version: "1.0",
- author: "Chitron Bhattacharjee",
+ author: "Raihan",
  countDown: 5,
  role: 2,
  shortDescription: {
@@ -54,8 +54,8 @@ onReply: async function({ api, event, Reply, getLang, commandName, prefix }) {
 ╰──────────────⭓
 ╭──────────────⭓
 │➜ 𝐎𝐭𝐡𝐞𝐫 𝐃𝐞𝐭𝐚𝐢𝐥𝐬🦆
-│Owner : Chitron Bhattacharjee 
-│FB : https://www.facebook.com/adirexcb
+│Owner : Rai Han 
+│FB : https://www.facebook.com/hydrocarbonn
 ╰──────────────⭓`, Reply.pending[ArYanIndex - 1].threadID);
  count+=1;
  }
