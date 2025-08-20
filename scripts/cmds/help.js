@@ -1,129 +1,156 @@
+const { getPrefix } = global.utils;
+const { commands, aliases } = global.GoatBot;
+
+// Simple fuzzy search for suggestion
+function getClosestCommand(name) {
+  const lowerName = name.toLowerCase();
+  let closest = null;
+  let minDist = Infinity;
+
+  for (const cmdName of commands.keys()) {
+    const dist = levenshteinDistance(lowerName, cmdName.toLowerCase());
+    if (dist < minDist) {
+      minDist = dist;
+      closest = cmdName;
+    }
+  }
+  if (minDist <= 3) return closest;
+  return null;
+}
+
+// Levenshtein distance function (edit distance)
+function levenshteinDistance(a, b) {
+  const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+
+  for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+  for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+
+  for (let j = 1; j <= b.length; j++) {
+    for (let i = 1; i <= a.length; i++) {
+      const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[j][i] = Math.min(
+        matrix[j][i - 1] + 1,      // deletion
+        matrix[j - 1][i] + 1,      // insertion
+        matrix[j - 1][i - 1] + indicator // substitution
+      );
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
 module.exports = {
   config: {
     name: "help",
-    aliases: ["hlp", "cmd", "start"],
-    version: "5.1",
-    author: "Raihan_ Milow",
+    version: "1.26",
+    author: "Raihan",
     countDown: 5,
     role: 0,
-    shortDescription: "Show all commands with pagination & auto-delete menu",
-    longDescription: "Commands list with page controls and menu auto delete after 20 seconds",
+    shortDescription: { en: "View command usage and list all commands directly" },
+    longDescription: { en: "View command usage and list all commands directly" },
     category: "info",
-    guide: {
-      en: "{pn} [command name|next|prev|page number]"
-    }
+    guide: { en: "{pn} / help [category] or help commandName" },
+    priority: 1,
   },
 
-  onStart: async function ({ api, event, commandName, args }) {
-    try {
-      if (!global.GoatBot || !global.GoatBot.commands || !global.GoatBot.config) {
-        return api.sendMessage(
-          "⚠️ GoatBot core not loaded properly. Please restart the bot.",
-          event.threadID,
-          event.messageID
-        );
-      }
+  onStart: async function ({ message, args, event, role }) {
+    const { threadID } = event;
+    const prefix = getPrefix(threadID);
+    const categories = {};
 
-      const prefix = global.GoatBot.config.prefix || ".";
-      const commands = [...global.GoatBot.commands.values()];
+    for (const [name, value] of commands) {
+      if (!value?.config || typeof value.onStart !== "function") continue;
+      if (value.config.role > 1 && role < value.config.role) continue;
 
-      // If user requests a specific command
-      if (args.length && isNaN(args[0])) {
-        const query = args[0].toLowerCase();
-        const cmd = commands.find(
-          c => c.config.name === query || (c.config.aliases && c.config.aliases.includes(query))
-        );
+      const category = value.config.category?.toLowerCase() || "uncategorized";
+      if (!categories[category]) categories[category] = [];
+      categories[category].push(name);
+    }
 
-        if (!cmd) {
-          return api.sendMessage(`❌ Command not found: ${args[0]}`, event.threadID, event.messageID);
+    const rawInput = args.join(" ").trim();
+
+    // Show full help list if no argument
+    if (!rawInput) {
+      let msg = "╔══════════════════╗\n";
+      msg += "   𝐑𝐀𝐈𝐇𝐀𝐍 𝐀𝐈 𝐇𝐄𝐋𝐏 𝐌𝐄𝐍𝐔\n";
+      msg += "╚══════════════════╝\n";
+
+      for (const category of Object.keys(categories).sort()) {
+        const cmdList = categories[category];
+        msg += `┍━━━[ ${category.toUpperCase()} ]\n`;
+
+        const sortedNames = cmdList.sort((a, b) => a.localeCompare(b));
+        for (const cmdName of sortedNames) {
+          msg += `┋〄 ${cmdName}\n`;
         }
 
-        const detailMsg =
-          `📄 𝗖𝗼𝗺𝗺𝗮𝗻𝗱: ${cmd.config.name}\n` +
-          `🔖 Aliases: ${cmd.config.aliases?.join(", ") || "None"}\n` +
-          `📌 Description: ${cmd.config.longDescription || cmd.config.shortDescription || "No description"}\n` +
-          `📂 Category: ${cmd.config.category || "Uncategorized"}\n` +
-          `⌛ Cooldown: ${cmd.config.countDown || 3}s\n` +
-          `✍ Author: ${cmd.config.author}`;
-
-        return api.sendMessage(detailMsg, event.threadID, event.messageID);
+        msg += "┕━━━━━━━━━━━━◊\n";
       }
 
-      // Group commands by category
-      const priorityCategories = ["AI", "IMAGECREATE"];
-      const categories = {};
+      msg += "┍━━━[INFO]━━━◊\n";
+      msg += `┋➥ TOTAL CMD : [${commands.size}]\n`;
+      msg += `┋➥ PREFIX    : ${prefix}\n`;
+      msg += `┋➥ OWNER     : Raihan\n`;
+      msg += "┕━━━━━━━━━━━◊";
 
-      for (const cmd of commands) {
-        let cat = cmd.config.category ? cmd.config.category.toUpperCase() : "UNCATEGORIZED";
-        if (cat.includes("IMAGE")) cat = "IMAGECREATE";
-        if (!categories[cat]) categories[cat] = [];
-        categories[cat].push(cmd);
-      }
+      const sent = await message.reply(msg);
 
-      const sortedCategoryKeys = [
-        ...priorityCategories.filter(cat => categories[cat]),
-        ...Object.keys(categories)
-          .filter(cat => !priorityCategories.includes(cat))
-          .sort(),
-      ];
+      // Auto unsend after 30s
+      setTimeout(() => {
+        message.unsend(sent.messageID);
+      }, 30000);
 
-      // Format commands for display
-      const formattedCommands = [];
-      for (const category of sortedCategoryKeys) {
-        if (!categories[category] || !categories[category].length) continue;
-        formattedCommands.push(`╭─────⭔『 𝗖𝗔𝗧𝗘𝗚𝗢𝗥𝗬: ${category} 』`);
-        categories[category].forEach(cmd => {
-          let line = `│✧ ${cmd.config.name}`;
-          if (cmd.config.aliases?.length) line += ` (aliases: ${cmd.config.aliases.join(", ")})`;
-          formattedCommands.push(line);
-        });
-        formattedCommands.push("╰────────────⭓");
-        formattedCommands.push(""); // keep blank line for spacing
-      }
-
-      // Pagination logic
-      const PAGE_SIZE = 20;
-      const totalPages = Math.ceil(formattedCommands.length / PAGE_SIZE);
-      let currentPage = 1;
-
-      if (args.length) {
-        const input = args[0].toLowerCase();
-        if (input === "next") currentPage = Math.min(totalPages, parseInt(event.body?.match(/page:(\d+)/)?.[1] || 1) + 1);
-        else if (input === "prev") currentPage = Math.max(1, parseInt(event.body?.match(/page:(\d+)/)?.[1] || 1) - 1);
-        else if (!isNaN(input)) currentPage = Math.min(totalPages, Math.max(1, parseInt(input)));
-      }
-
-      function buildPage(page) {
-        const start = (page - 1) * PAGE_SIZE;
-        const end = start + PAGE_SIZE;
-        const pageContent = formattedCommands.slice(start, end).join("\n");
-
-        return (
-          `${pageContent}\n` +
-          "╰─────⭔──────────⭓\n" +
-          "╭─────⭔『 𝗜𝗻𝗳𝗼 』\n" +
-          `│ Page ${page}/${totalPages} | Total commands: ${commands.length}\n` +
-          `│ Type: ${prefix}${commandName} <command> for details\n` +
-          `│ Type: ${prefix}${commandName} next | prev | [page number]\n` +
-          "╰────────────⭓\n\n" +
-          "╭─────⭔『 𝗘𝗻𝗷𝗼𝘆 🍀 』\n" +
-          "│ > Powered by Raihan & Milow\n" +
-          "╰────────────⭓"
-        );
-      }
-
-      const sentMessage = await api.sendMessage(buildPage(currentPage), event.threadID, event.messageID);
-
-      // Auto-delete message after 20 seconds
-      setTimeout(async () => {
-        try {
-          await api.unsendMessage(sentMessage.messageID);
-        } catch {}
-      }, 20000);
-
-    } catch (error) {
-      console.error("Error in help command:", error);
-      api.sendMessage("❌ An unexpected error occurred.", event.threadID, event.messageID);
+      return;
     }
-  }
+
+    // Show command info for specific command
+    const commandName = rawInput.toLowerCase();
+    const command = commands.get(commandName) || commands.get(aliases.get(commandName));
+
+    if (!command || !command?.config) {
+      const suggestion = getClosestCommand(commandName);
+      if (suggestion) {
+        return message.reply(`❌ Command "${commandName}" khuje paoya jay nai.\n👉 Did you mean: "${suggestion}"?`);
+      } else {
+        return message.reply(`❌ Command "${commandName}" khuje paoya jay nai.\nTry: /help or /help [category]`);
+      }
+    }
+
+    const configCommand = command.config;
+    const roleText = roleTextToString(configCommand.role);
+    const longDescription = configCommand.longDescription?.en || "No description available.";
+    const guideBody = configCommand.guide?.en || "No guide available.";
+    const usage = guideBody.replace(/{pn}/g, `${prefix}${configCommand.name}`);
+
+    const msg = `
+╔══════════════════╗
+   𝐑𝐀𝐈𝐇𝐀𝐍 𝐀𝐈 𝐂𝐎𝐌𝐌𝐀𝐍𝐃
+╚══════════════════╝
+┋🧩 Name       : ${configCommand.name}
+┋🗂️ Category   : ${configCommand.category || "Uncategorized"}
+┋📜 Description: ${longDescription}
+┋🔁 Aliases    : ${configCommand.aliases?.join(", ") || "None"}
+┋⚙️ Version    : ${configCommand.version || "1.0"}
+┋🔐 Permission : ${configCommand.role} (${roleText})
+┋⏱️ Cooldown   : ${configCommand.countDown || 5}s
+┋👑 Author     : Raihan
+┋📖 Usage      : ${usage}
+╚════════════════════╝`;
+
+    const sent = await message.reply(msg);
+
+    // Auto unsend after 30s
+    setTimeout(() => {
+      message.unsend(sent.messageID);
+    }, 30000);
+  },
 };
+
+// Helper to convert role number to text
+function roleTextToString(role) {
+  switch (role) {
+    case 0: return "All users";
+    case 1: return "Group Admins";
+    case 2: return "Bot Admins";
+    default: return "Unknown";
+  }
+} 
