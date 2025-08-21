@@ -1,7 +1,6 @@
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
 
-// Simple fuzzy search for suggestion
 function getClosestCommand(name) {
   const lowerName = name.toLowerCase();
   let closest = null;
@@ -18,10 +17,8 @@ function getClosestCommand(name) {
   return null;
 }
 
-// Levenshtein distance function (edit distance)
 function levenshteinDistance(a, b) {
   const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
-
   for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
   for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
 
@@ -29,9 +26,9 @@ function levenshteinDistance(a, b) {
     for (let i = 1; i <= a.length; i++) {
       const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
       matrix[j][i] = Math.min(
-        matrix[j][i - 1] + 1,      // deletion
-        matrix[j - 1][i] + 1,      // insertion
-        matrix[j - 1][i - 1] + indicator // substitution
+        matrix[j][i - 1] + 1,
+        matrix[j - 1][i] + 1,
+        matrix[j - 1][i - 1] + indicator
       );
     }
   }
@@ -41,14 +38,14 @@ function levenshteinDistance(a, b) {
 module.exports = {
   config: {
     name: "help",
-    version: "1.26",
-    author: "Raihan",
+    version: "2.2",
+    author: "raihan",
     countDown: 5,
     role: 0,
     shortDescription: { en: "View command usage and list all commands directly" },
-    longDescription: { en: "View command usage and list all commands directly" },
+    longDescription: { en: "View command usage and list all commands directly with pages" },
     category: "info",
-    guide: { en: "{pn} / help [category] or help commandName" },
+    guide: { en: "{pn} /help [category] or /help commandName" },
     priority: 1,
   },
 
@@ -68,50 +65,67 @@ module.exports = {
 
     const rawInput = args.join(" ").trim();
 
-    // Show full help list if no argument
+    // Show full list if no argument
     if (!rawInput) {
-      let msg = "╔══════════════════╗\n";
-      msg += "   𝐑𝐀𝐈𝐇𝐀𝐍 𝐀𝐈 𝐇𝐄𝐋𝐏 𝐌𝐄𝐍𝐔\n";
-      msg += "╚══════════════════╝\n";
+      let allCategories = Object.keys(categories).sort();
 
-      for (const category of Object.keys(categories).sort()) {
+      // Move image/gen categories to bottom
+      allCategories = allCategories.sort((a, b) => {
+        if (a.includes("image") || a.includes("gen")) return 1;
+        if (b.includes("image") || b.includes("gen")) return -1;
+        return a.localeCompare(b);
+      });
+
+      const perPage = 10;
+      let page = parseInt(args[0]) || 1;
+      let totalPages = Math.ceil(allCategories.length / perPage);
+      if (page > totalPages) page = totalPages;
+
+      const start = (page - 1) * perPage;
+      const end = start + perPage;
+      const showCategories = allCategories.slice(start, end);
+
+      let msg = "╔═══════════════╗\n";
+      msg += "       𝑴𝒊𝒍𝒐𝒘 𝑯𝑬𝑳𝑷 𝑴𝑬𝑵𝑼\n";
+      msg += "╚═══════════════╝\n";
+
+      for (const category of showCategories) {
         const cmdList = categories[category];
         msg += `┍━━━[ ${category.toUpperCase()} ]\n`;
-
         const sortedNames = cmdList.sort((a, b) => a.localeCompare(b));
         for (const cmdName of sortedNames) {
           msg += `┋〄 ${cmdName}\n`;
         }
-
         msg += "┕━━━━━━━━━━━━◊\n";
       }
 
-      msg += "┍━━━[INFO]━━━◊\n";
-      msg += `┋➥ TOTAL CMD : [${commands.size}]\n`;
-      msg += `┋➥ PREFIX    : ${prefix}\n`;
-      msg += `┋➥ OWNER     : Raihan\n`;
+      msg += `\n📑 Page: ${page}/${totalPages}`;
+      msg += "\n┍━━━[ INFO ]━━━◊\n";
+      msg += `┋➥ Total Commands: [${commands.size}]\n`;
+      msg += `┋➥ Prefix: ${prefix}\n`;
+      msg += `┋➥ Owner: raihan\n`;
       msg += "┕━━━━━━━━━━━◊";
 
-      const sent = await message.reply(msg);
+      const replyMsg = await message.reply(msg);
 
-      // Auto unsend after 30s
+      // Auto unsend after 40s
       setTimeout(() => {
-        message.unsend(sent.messageID);
-      }, 30000);
+        message.unsend(replyMsg.messageID);
+      }, 40 * 1000);
 
       return;
     }
 
-    // Show command info for specific command
+    // Command specific info
     const commandName = rawInput.toLowerCase();
     const command = commands.get(commandName) || commands.get(aliases.get(commandName));
 
     if (!command || !command?.config) {
       const suggestion = getClosestCommand(commandName);
       if (suggestion) {
-        return message.reply(`❌ Command "${commandName}" khuje paoya jay nai.\n👉 Did you mean: "${suggestion}"?`);
+        return message.reply(`❌ Command "${commandName}" not found.\n👉 Did you mean: "${suggestion}"?`);
       } else {
-        return message.reply(`❌ Command "${commandName}" khuje paoya jay nai.\nTry: /help or /help [category]`);
+        return message.reply(`❌ Command "${commandName}" not found.\nTry: /help or /help [category]`);
       }
     }
 
@@ -122,30 +136,25 @@ module.exports = {
     const usage = guideBody.replace(/{pn}/g, `${prefix}${configCommand.name}`);
 
     const msg = `
-╔══════════════════╗
-   𝐑𝐀𝐈𝐇𝐀𝐍 𝐀𝐈 𝐂𝐎𝐌𝐌𝐀𝐍𝐃
-╚══════════════════╝
+╔══ [ COMMAND INFO ] ══╗
 ┋🧩 Name       : ${configCommand.name}
 ┋🗂️ Category   : ${configCommand.category || "Uncategorized"}
 ┋📜 Description: ${longDescription}
-┋🔁 Aliases    : ${configCommand.aliases?.join(", ") || "None"}
+┋🔁 Aliases    : None
 ┋⚙️ Version    : ${configCommand.version || "1.0"}
 ┋🔐 Permission : ${configCommand.role} (${roleText})
 ┋⏱️ Cooldown   : ${configCommand.countDown || 5}s
-┋👑 Author     : Raihan
+┋👑 Author     : raihan
 ┋📖 Usage      : ${usage}
 ╚════════════════════╝`;
 
-    const sent = await message.reply(msg);
-
-    // Auto unsend after 30s
+    const replyMsg = await message.reply(msg);
     setTimeout(() => {
-      message.unsend(sent.messageID);
-    }, 30000);
+      message.unsend(replyMsg.messageID);
+    }, 40 * 1000);
   },
 };
 
-// Helper to convert role number to text
 function roleTextToString(role) {
   switch (role) {
     case 0: return "All users";
@@ -153,4 +162,4 @@ function roleTextToString(role) {
     case 2: return "Bot Admins";
     default: return "Unknown";
   }
-} 
+}
