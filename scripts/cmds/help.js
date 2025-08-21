@@ -1,22 +1,7 @@
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
 
-function getClosestCommand(name) {
-  const lowerName = name.toLowerCase();
-  let closest = null;
-  let minDist = Infinity;
-
-  for (const cmdName of commands.keys()) {
-    const dist = levenshteinDistance(lowerName, cmdName.toLowerCase());
-    if (dist < minDist) {
-      minDist = dist;
-      closest = cmdName;
-    }
-  }
-  if (minDist <= 3) return closest;
-  return null;
-}
-
+// Levenshtein distance for suggestions
 function levenshteinDistance(a, b) {
   const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
   for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
@@ -35,15 +20,41 @@ function levenshteinDistance(a, b) {
   return matrix[b.length][a.length];
 }
 
+// Find closest command for suggestion
+function getClosestCommand(name) {
+  const lowerName = name.toLowerCase();
+  let closest = null;
+  let minDist = Infinity;
+
+  for (const cmdName of commands.keys()) {
+    const dist = levenshteinDistance(lowerName, cmdName.toLowerCase());
+    if (dist < minDist) {
+      minDist = dist;
+      closest = cmdName;
+    }
+  }
+
+  for (const [alias, cmdName] of aliases) {
+    const dist = levenshteinDistance(lowerName, alias.toLowerCase());
+    if (dist < minDist) {
+      minDist = dist;
+      closest = cmdName;
+    }
+  }
+
+  if (minDist <= 3) return closest;
+  return null;
+}
+
 module.exports = {
   config: {
     name: "help",
-    version: "2.2",
+    version: "2.3",
     author: "raihan",
     countDown: 5,
     role: 0,
-    shortDescription: { en: "View command usage and list all commands directly" },
-    longDescription: { en: "View command usage and list all commands directly with pages" },
+    shortDescription: { en: "View command usage and list all commands" },
+    longDescription: { en: "View command usage and list all commands directly with categories" },
     category: "info",
     guide: { en: "{pn} /help [category] or /help commandName" },
     priority: 1,
@@ -54,6 +65,7 @@ module.exports = {
     const prefix = getPrefix(threadID);
     const categories = {};
 
+    // Group commands by category
     for (const [name, value] of commands) {
       if (!value?.config || typeof value.onStart !== "function") continue;
       if (value.config.role > 1 && role < value.config.role) continue;
@@ -76,47 +88,35 @@ module.exports = {
         return a.localeCompare(b);
       });
 
-      const perPage = 10;
-      let page = parseInt(args[0]) || 1;
-      let totalPages = Math.ceil(allCategories.length / perPage);
-      if (page > totalPages) page = totalPages;
-
-      const start = (page - 1) * perPage;
-      const end = start + perPage;
-      const showCategories = allCategories.slice(start, end);
-
       let msg = "╔═══════════════╗\n";
       msg += "       𝑴𝒊𝒍𝒐𝒘 𝑯𝑬𝑳𝑷 𝑴𝑬𝑵𝑼\n";
       msg += "╚═══════════════╝\n";
 
-      for (const category of showCategories) {
-        const cmdList = categories[category];
-        msg += `┍━━━[ ${category.toUpperCase()} ]\n`;
-        const sortedNames = cmdList.sort((a, b) => a.localeCompare(b));
-        for (const cmdName of sortedNames) {
-          msg += `┋〄 ${cmdName}\n`;
+      for (const category of allCategories) {
+        const cmdList = categories[category].sort((a, b) => a.localeCompare(b));
+        msg += `┍━━━━━━━━━━━━[ ${category.toUpperCase()} ]\n`;
+
+        for (const cmdName of cmdList) {
+          // Collect aliases
+          const aliasList = [];
+          for (const [a, c] of aliases) if (c === cmdName) aliasList.push(a);
+
+          msg += `┋〄 ${cmdName}${aliasList.length ? ` (Aliases: ${aliasList.join(", ")})` : ""}\n`;
         }
-        msg += "┕━━━━━━━━━━━━◊\n";
+
+        msg += "┕━━━━━━━━━━━━━━━━━━━━━◊\n";
       }
 
-      msg += `\n📑 Page: ${page}/${totalPages}`;
-      msg += "\n┍━━━[ INFO ]━━━◊\n";
-      msg += `┋➥ Total Commands: [${commands.size}]\n`;
-      msg += `┋➥ Prefix: ${prefix}\n`;
-      msg += `┋➥ Owner: raihan\n`;
-      msg += "┕━━━━━━━━━━━◊";
+      msg += `\n📑 Total Commands: ${commands.size}`;
+      msg += `\n📌 Prefix: ${prefix}`;
+      msg += "\n👑 Owner: raihan";
 
       const replyMsg = await message.reply(msg);
-
-      // Auto unsend after 40s
-      setTimeout(() => {
-        message.unsend(replyMsg.messageID);
-      }, 40 * 1000);
-
+      setTimeout(() => { try { message.unsend(replyMsg.messageID) } catch {} }, 40 * 1000);
       return;
     }
 
-    // Command specific info
+    // Command-specific info
     const commandName = rawInput.toLowerCase();
     const command = commands.get(commandName) || commands.get(aliases.get(commandName));
 
@@ -135,12 +135,16 @@ module.exports = {
     const guideBody = configCommand.guide?.en || "No guide available.";
     const usage = guideBody.replace(/{pn}/g, `${prefix}${configCommand.name}`);
 
+    // Aliases for this command
+    const aliasList = [];
+    for (const [a, c] of aliases) if (c === configCommand.name) aliasList.push(a);
+
     const msg = `
 ╔══ [ COMMAND INFO ] ══╗
 ┋🧩 Name       : ${configCommand.name}
 ┋🗂️ Category   : ${configCommand.category || "Uncategorized"}
 ┋📜 Description: ${longDescription}
-┋🔁 Aliases    : None
+┋🔁 Aliases    : ${aliasList.length ? aliasList.join(", ") : "None"}
 ┋⚙️ Version    : ${configCommand.version || "1.0"}
 ┋🔐 Permission : ${configCommand.role} (${roleText})
 ┋⏱️ Cooldown   : ${configCommand.countDown || 5}s
@@ -149,12 +153,11 @@ module.exports = {
 ╚════════════════════╝`;
 
     const replyMsg = await message.reply(msg);
-    setTimeout(() => {
-      message.unsend(replyMsg.messageID);
-    }, 40 * 1000);
+    setTimeout(() => { try { message.unsend(replyMsg.messageID) } catch {} }, 40 * 1000);
   },
 };
 
+// Convert role number to string
 function roleTextToString(role) {
   switch (role) {
     case 0: return "All users";
