@@ -94,7 +94,7 @@ module.exports = {
 
       for (const category of allCategories) {
         const cmdList = categories[category].sort((a, b) => a.localeCompare(b));
-        msg += `┍━━━━━━━━━━━━[ ${category.toUpperCase()} ]\n`;
+        msg += `┍━━━━━━━[ ${category.toUpperCase()} ]\n`;
 
         for (const cmdName of cmdList) {
           // Collect aliases
@@ -104,7 +104,7 @@ module.exports = {
           msg += `┋〄 ${cmdName}${aliasList.length ? ` (Aliases: ${aliasList.join(", ")})` : ""}\n`;
         }
 
-        msg += "┕━━━━━━━━━━━━━━━━━━━━━◊\n";
+        msg += "┕━━━━━━━━━━━━◊\n";
       }
 
       msg += `\n📑 Total Commands: ${commands.size}`;
