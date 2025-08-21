@@ -94,17 +94,10 @@ module.exports = {
 
       for (const category of allCategories) {
         const cmdList = categories[category].sort((a, b) => a.localeCompare(b));
-        msg += `┍━━━━━━━[ ${category.toUpperCase()} ]\n`;
+        msg += `┍━━━━━━━━━[ ${category.toUpperCase()} ]\n`;
 
         for (const cmdName of cmdList) {
-          // Collect aliases
-          const aliasList = [];
-          for (const [a, c] of aliases) if (c === cmdName) aliasList.push(a);
-
-          msg += `┋〄 ${cmdName}${aliasList.length ? ` (Aliases: ${aliasList.join(", ")})` : ""}\n`;
-        }
-
-        msg += "┕━━━━━━━━━━━━◊\n";
+        msg += "┕━━━━━━━━━━━━━━◊\n";
       }
 
       msg += "┍━━━[𝙸𝙽𝙵𝚁𝙾𝙼]━━━◊\n";
