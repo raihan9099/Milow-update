@@ -1,5 +1,5 @@
 const { getPrefix } = global.utils;
-const { commands, aliases } = global.GoatBot;
+const { commands } = global.GoatBot;
 
 // Levenshtein distance for suggestions
 function levenshteinDistance(a, b) {
@@ -28,14 +28,6 @@ function getClosestCommand(name) {
 
   for (const cmdName of commands.keys()) {
     const dist = levenshteinDistance(lowerName, cmdName.toLowerCase());
-    if (dist < minDist) {
-      minDist = dist;
-      closest = cmdName;
-    }
-  }
-
-  for (const [alias, cmdName] of aliases) {
-    const dist = levenshteinDistance(lowerName, alias.toLowerCase());
     if (dist < minDist) {
       minDist = dist;
       closest = cmdName;
@@ -97,7 +89,10 @@ module.exports = {
         msg += `┍━━━━━━━━━[ ${category.toUpperCase()} ]\n`;
 
         for (const cmdName of cmdList) {
-        msg += "┕━━━━━━━━━━━━━━◊\n";
+          msg += `┋〄 ${cmdName}\n`;
+        }
+
+        msg += "┕━━━━━━━━━━━━━━━◊\n";
       }
 
       msg += "┍━━━[𝙸𝙽𝙵𝚁𝙾𝙼]━━━◊\n";
@@ -105,6 +100,7 @@ module.exports = {
       msg += `┋➥𝙿𝚁𝙴𝙵𝙸𝚇: ${prefix}\n`;
       msg += `┋𝙾𝚆𝙽𝙴𝚁: RaiHan\n`;
       msg += "┕━━━━━━━━━━━◊";
+
       const replyMsg = await message.reply(msg);
       setTimeout(() => { try { message.unsend(replyMsg.messageID) } catch {} }, 40 * 1000);
       return;
@@ -112,7 +108,7 @@ module.exports = {
 
     // Command-specific info
     const commandName = rawInput.toLowerCase();
-    const command = commands.get(commandName) || commands.get(aliases.get(commandName));
+    const command = commands.get(commandName);
 
     if (!command || !command?.config) {
       const suggestion = getClosestCommand(commandName);
@@ -129,16 +125,11 @@ module.exports = {
     const guideBody = configCommand.guide?.en || "No guide available.";
     const usage = guideBody.replace(/{pn}/g, `${prefix}${configCommand.name}`);
 
-    // Aliases for this command
-    const aliasList = [];
-    for (const [a, c] of aliases) if (c === configCommand.name) aliasList.push(a);
-
     const msg = `
 ╔══ [ COMMAND INFO ] ══╗
 ┋🧩 Name       : ${configCommand.name}
 ┋🗂️ Category   : ${configCommand.category || "Uncategorized"}
 ┋📜 Description: ${longDescription}
-┋🔁 Aliases    : ${aliasList.length ? aliasList.join(", ") : "None"}
 ┋⚙️ Version    : ${configCommand.version || "1.0"}
 ┋🔐 Permission : ${configCommand.role} (${roleText})
 ┋⏱️ Cooldown   : ${configCommand.countDown || 5}s
