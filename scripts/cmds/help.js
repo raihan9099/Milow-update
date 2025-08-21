@@ -107,10 +107,11 @@ module.exports = {
         msg += "┕━━━━━━━━━━━━◊\n";
       }
 
-      msg += `\n📑 Total Commands: ${commands.size}`;
-      msg += `\n📌 Prefix: ${prefix}`;
-      msg += "\n👑 Owner: raihan";
-
+      msg += "┍━━━[𝙸𝙽𝙵𝚁𝙾𝙼]━━━◊\n";
+      msg += `┋➥𝚃𝙾𝚃𝙰𝙻 𝙲𝙼𝙳: [${commands.size}]\n`;
+      msg += `┋➥𝙿𝚁𝙴𝙵𝙸𝚇: ${prefix}\n`;
+      msg += `┋𝙾𝚆𝙽𝙴𝚁: RaiHan\n`;
+      msg += "┕━━━━━━━━━━━◊";
       const replyMsg = await message.reply(msg);
       setTimeout(() => { try { message.unsend(replyMsg.messageID) } catch {} }, 40 * 1000);
       return;
