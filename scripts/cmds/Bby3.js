@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { GoatWrapper } = require("fca-liane-utils");
 
-const GEMINI_API_KEY = "AIzaSyDbXYdHBeMfehplNK_ELcMFbVDMIxTRE5k";
+const GEMINI_API_KEY = "AIzaSyBI6a4QCxoTJ9FS1MAiNRfMYpaztZjTeuE";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 module.exports.config = {
