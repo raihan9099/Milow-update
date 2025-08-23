@@ -13,7 +13,7 @@ module.exports.config = {
   usePrefix: true,
   guide: "[message] | just type sakura",
   category: "ai",
-  aliases: ["haruka", "windboy", "saruka"]
+  aliases: ["milow", "milo", "Hi"]
 };
 
 const conversationHistory = new Map();
@@ -55,7 +55,7 @@ const randomOpeners = [
   "Bolo bondhu, ki help lagbe? 😎",
   "kire mama ki obosta tor? 🫠",
   "Yes I'm here... ✨",
-  "tor ki pora lekha nai? saradin sakura sakura korish ken? 😾"
+  "tor ki pora lekha nai? saradin milow milow korish ken? 😾"
 ];
 
 function isInfoRequest(text) {
