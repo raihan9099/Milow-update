@@ -5,7 +5,7 @@ const GEMINI_API_KEY = "AIzaSyBI6a4QCxoTJ9FS1MAiNRfMYpaztZjTeuE";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 module.exports.config = {
-  name: "milu",
+  name: "bondhu",
   version: "1.0.0",
   role: 0,
   author: "Raihan",
@@ -13,7 +13,7 @@ module.exports.config = {
   usePrefix: true,
   guide: "[message] | just type raihan",
   category: "ai",
-  aliases: ["friend", "bot", "miluai"]
+  aliases: ["friend", "miluai"]
 };
 
 const conversationHistory = new Map();
