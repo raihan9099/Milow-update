@@ -146,7 +146,7 @@ async function createSpyCard(opts) {
 
 module.exports = {
   config: {
-    name: "spy2",
+    name: "spy",
     version: "6.6",
     role: 0,
     author: "Ew'r Saim",
