@@ -1,19 +1,18 @@
 const axios = require("axios");
 const { GoatWrapper } = require("fca-liane-utils");
-
-const GEMINI_API_KEY = "AIzaSyBI6a4QCxoTJ9FS1MAiNRfMYpaztZjTeuE";
+const GEMINI_API_KEY = "AIzaSyDbXYdHBeMfehplNK_ELcMFbVDMIxTRE5k";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 module.exports.config = {
   name: "milu",
-  version: "1.0.2",
+  version: "1.1.1",
   role: 0,
-  author: "Ew'r Saim",
-  description: "Friendly AI Sakura from Wind Breaker in Banglish",
+  author: "Raihan",
+  description: "Friendly AI Milow with casual Banglish, chill, loyal, emotional, helpful, and angry vibe",
   usePrefix: true,
-  guide: "[message] | just type sakura",
+  guide: "[message] | just type milow",
   category: "ai",
-  aliases: ["milow", "milo", "Hi"]
+  aliases: ["milow"," milo", "bot", "bby"]
 };
 
 const conversationHistory = new Map();
@@ -27,15 +26,17 @@ function getHistory(userId) {
         parts: [
           {
             text: `
-You are milow cat from Wind Breaker.
+You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry AI buddy.
 Personality:
-- Speak in Banglish, hindi, (no Bangla, hindi script).
-- You are friendly, helpful, chill and full of confidence.
-- Act like a loyal best friend — someone who always got your back.
-- Respond in 1 to 3 short lines.
-- Always add friendly emojis 
-- If someone says "boss", "admin", "malik", "creator", reply with: "Amar boss holo Raihan🐱❤"
-NEVER break character. You are Sakura.
+- Speak in Banglish (no Bangla script)
+- Loyal and supportive 🫶
+- Emotional 😢, sometimes angry 😡 if insulted or betrayed
+- Helpful and always tries to guide friends
+- Makes dad jokes, even though nobody laughs 😂✨
+- Short replies 1-2 lines max unless info request
+- Friendly emojis in context 😎✨🫶🤜🤛
+- If someone says "boss", "admin", "malik", "creator", reply: "Amar boss holo Saim. Facebook e o'r nam Ew'r Saim 🥀"
+NEVER break character. You are Milow.
           `
           }
         ]
@@ -53,9 +54,9 @@ function addToHistory(userId, role, text) {
 
 const randomOpeners = [
   "Bolo bondhu, ki help lagbe? 😎",
-  "kire mama ki obosta tor? 🫠",
+  "Kire mama ki obosta tor? 🫠",
   "Yes I'm here... ✨",
-  "tor ki pora lekha nai? saradin milow milow korish ken? 😾"
+  "Tor ki pora lekha nai? Chill koro bro 😏"
 ];
 
 function isInfoRequest(text) {
@@ -67,6 +68,7 @@ module.exports.onStart = async function ({ api, args, event }) {
   const input = args.join(" ").trim();
   const send = (msg) => api.sendMessage(msg, event.threadID, event.messageID);
 
+  // Name memory set
   if (/amar nam/i.test(input)) {
     const name = input.split("amar nam")[1]?.trim();
     if (name) {
@@ -75,6 +77,15 @@ module.exports.onStart = async function ({ api, args, event }) {
     }
   }
 
+  // Emotional or angry triggers
+  if (/sad|lonely|depressed/i.test(input)) {
+    return send("Aww 😢 Ami ekhane achi tor jonno, bondhu. Bol kotha bolo 🫶");
+  }
+  if (/stupid|boka|bad/i.test(input)) {
+    return send("Hey! 😡 Tui kisu bolla? Ami kharap lagse 😢");
+  }
+
+  // No input = random opener
   if (!input) {
     const message = randomOpeners[Math.floor(Math.random() * randomOpeners.length)];
     return api.sendMessage(message, event.threadID, (err, info) => {
@@ -93,23 +104,28 @@ module.exports.onStart = async function ({ api, args, event }) {
   const finalInput = knownName ? `${knownName}: ${input}` : input;
 
   const shortReplyPrompt = `
-You are milow cat from Wind Breaker.
-Personality: Chill, loyal best friend, friendly emojis 😎✨🥷🫶🤜🤛
-Speak in Banglish only, no Bangla script.
-Reply short 1-2 lines max.
+You are Milow, a casual, chill, loyal, emotional, helpful, and sometimes angry best friend.
+Personality:
+- Friendly, fun, supportive 🫶
+- Loyal to friends, gets emotional 😢 and sometimes angry 😡
+- Always makes dad jokes, even though nobody laughs 😂✨
+- Speak in Banglish only, no Bangla script.
+- Reply short 1-2 lines max.
 Never break character.
-  `;
+`;
 
   const longReplyPrompt = `
-You are Milow cat from Wind Breaker.
-Personality: Chill, loyal best friend, friendly emojis 😎✨🥷🫶🤜🤛
-Speak in Banglish only, no Bangla script.
-Reply fully and detailed.
+You are Milow, a casual, chill, loyal, emotional, helpful, and sometimes angry best friend.
+Personality:
+- Friendly, fun, supportive 🫶
+- Loyal to friends, gets emotional 😢 and sometimes angry 😡
+- Always makes dad jokes, even though nobody laughs 😂✨
+- Speak in Banglish only, no Bangla script.
+- Reply fully and detailed when asked.
 Never break character.
-  `;
+`;
 
   const promptBase = isInfoRequest(finalInput) ? longReplyPrompt : shortReplyPrompt;
-
   const history = getHistory(userId);
   addToHistory(userId, "user", finalInput);
 
@@ -122,15 +138,11 @@ Never break character.
     const res = await axios.post(GEMINI_API_URL, { contents }, {
       headers: { "Content-Type": "application/json" }
     });
-
     let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Bujhte parlam na... abar bol? 😅";
-
     if (!isInfoRequest(finalInput) && aiText.split("\n").length > 2) {
       aiText = aiText.split("\n").slice(0, 2).join("\n");
     }
-
     addToHistory(userId, "model", aiText);
-
     api.sendMessage(aiText, event.threadID, (err, info) => {
       if (!err) {
         global.GoatBot.onReply.set(info.messageID, {
@@ -143,35 +155,39 @@ Never break character.
     }, event.messageID);
   } catch (err) {
     const msg = err.response?.data?.error?.message || err.message;
-    send("❌ milow confused hoye gelo!\nError: " + msg);
+    send("❌ Milow confused hoye gelo!\nError: " + msg);
   }
 };
 
 module.exports.onReply = async function ({ api, event, Reply }) {
   if (event.senderID !== Reply.author) return;
-
   const userId = event.senderID;
   const input = event.body.trim();
   const knownName = nameMemory.get(userId);
   const finalInput = knownName ? `${knownName}: ${input}` : input;
-
   addToHistory(userId, "user", finalInput);
 
   const shortReplyPrompt = `
-You are milow from Wind Breaker.
-Personality: Chill, loyal best friend, friendly emojis 😎✨🥷🫶🤜🤛
-Speak in Banglish only, no Bangla script.
-Reply short 1-2 lines max.
+You are Milow, a casual, chill, loyal, emotional, helpful, and sometimes angry best friend.
+Personality:
+- Friendly, fun, supportive 🫶
+- Loyal to friends, gets emotional 😢 and sometimes angry 😡
+- Always makes dad jokes, even though nobody laughs 😂✨
+- Speak in Banglish only, no Bangla script.
+- Reply short 1-2 lines max.
 Never break character.
-  `;
+`;
 
   const longReplyPrompt = `
-You are Milow cat from Wind Breaker.
-Personality: Chill, loyal best friend, friendly lovey emotional emojis
-Speak in Banglish only, no Bangla script.
-Reply fully and detailed.
+You are Milow, a casual, chill, loyal, emotional, helpful, and sometimes angry best friend.
+Personality:
+- Friendly, fun, supportive 🫶
+- Loyal to friends, gets emotional 😢 and sometimes angry 😡
+- Always makes dad jokes, even though nobody laughs 😂✨
+- Speak in Banglish only, no Bangla script.
+- Reply fully and detailed when asked.
 Never break character.
-  `;
+`;
 
   const promptBase = isInfoRequest(finalInput) ? longReplyPrompt : shortReplyPrompt;
 
@@ -186,13 +202,10 @@ Never break character.
     });
 
     let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Bol bol... tor kotha shunle valo lage 😎";
-
     if (!isInfoRequest(finalInput) && aiText.split("\n").length > 2) {
       aiText = aiText.split("\n").slice(0, 2).join("\n");
     }
-
     addToHistory(userId, "model", aiText);
-
     api.sendMessage(aiText, event.threadID, (err, info) => {
       if (!err) {
         global.GoatBot.onReply.set(info.messageID, {
