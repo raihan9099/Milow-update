@@ -1,4 +1,3 @@
-// scripts/cmds/casino.js
 const fs = require("fs");
 const path = require("path");
 
@@ -47,11 +46,38 @@ function incrementDailySpin(uid) {
   saveData();
 }
 
+// ------------------- DAILY RESET -------------------
+
+// Function to reset all users' spins
+function resetDailySpins() {
+  for (const uid in userData.dailySpins) {
+    userData.dailySpins[uid] = 0;
+  }
+  saveData();
+  console.log("✅ Daily spins reset for all users.");
+}
+
+// Calculate milliseconds until next midnight
+function msUntilMidnight() {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setHours(24, 0, 0, 0);
+  return midnight - now;
+}
+
+// Schedule the first reset
+setTimeout(function scheduleDailyReset() {
+  resetDailySpins();
+  setInterval(resetDailySpins, 24 * 60 * 60 * 1000); // every 24h
+}, msUntilMidnight());
+
+// ------------------- EXPORT MODULE -------------------
+
 module.exports = {
   name: "casino",
   author: "Raihan",
   category: "fun",
-  description: "Emoji Casino Game with persistent JSON storage",
+  description: "Emoji Casino Game with persistent JSON and daily spin reset",
   cooldown: 2,
 
   onStart: async function ({ api, event, args }) {
