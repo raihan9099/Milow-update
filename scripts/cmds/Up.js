@@ -7,7 +7,7 @@ module.exports = {
     name: "uptime",
     aliases: ["up", "upt"],
     version: "2.1",
-    author: "Ariyan + Saim",
+    author: "Raihan",
     role: 0,
     noPrefix: true,
     shortDescription: {
@@ -69,7 +69,7 @@ module.exports = {
       ctx.fillText("🤖 BOT UPTIME", 60, 100);
       ctx.fillText(`⏳ ${upTimeStr}`, 60, 200);
       ctx.fillText(`⚡ Ping: ${ping}ms`, 60, 280);
-      ctx.fillText(`👑 Owner: Saim`, 60, 360);
+      ctx.fillText(` Owner: Raihan `, 60, 360);
 
       // Step 6: Save and Send Image
       const buffer = canvas.toBuffer("image/png");
@@ -83,7 +83,7 @@ module.exports = {
 `(✿◕‿◕)ﾉ 𝑩𝒐𝒕 𝑺𝒕𝒂𝒕𝒖𝒔 💖
 ⏱ 𝑼𝒑𝒕𝒊𝒎𝒆 : ${upTimeStr} ⏳
 ⚡ 𝑷𝒊𝒏𝒈 : ${ping} ms 
-👑 𝑶𝒘𝒏𝒆𝒓 : 𝗥𝗮𝗶𝗛𝗮𝗻 💕
+ 𝑶𝒘𝒏𝒆𝒓 : 𝗥𝗮𝗶𝗛𝗮𝗻 
 •  •  •  •  •  •  •  •  •  •  •  •  •  • `,
         attachment: fs.createReadStream(imagePath)
       });
