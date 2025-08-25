@@ -10,9 +10,9 @@ module.exports.config = {
   author: "Raihan",
   description: "Friendly AI Milow with casual Banglish, chill, loyal, emotional, helpful, and angry vibe",
   usePrefix: true,
-  guide: "[message] | just type milow",
+  guide: "[message] | just type milu",
   category: "ai",
-  aliases: ["milow"," milo", "bot", "bby"]
+  aliases: [" milo","hello","Hi","@raihan"]
 };
 
 const conversationHistory = new Map();
