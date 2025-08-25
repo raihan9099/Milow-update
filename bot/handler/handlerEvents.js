@@ -326,10 +326,10 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 					// If we found a good match, suggest it
 					if (bestMatch && bestDistance <= 2) {
 						const suggestions = [
-							`Did you mean: ${prefix}${bestMatch}?`,
-							`Looks like a typo! Maybe you meant ${prefix}${bestMatch}?`,
+							`🙂Command pawa jay nai. try  ${prefix}${bestMatch}?`,
+							`Dekhe mone hocche mistake hoye geche!! Maybe you meant ${prefix}${bestMatch}?`,
 							`Command not found. Did you mean ${prefix}${bestMatch}?`,
-							`❌ Unknown command. Try ${prefix}${bestMatch} instead?`
+							`❌ Command khuje pelam na. Try ${prefix}${bestMatch} instead?`
 						];
 						const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
 						return await message.reply(randomSuggestion);
@@ -652,7 +652,7 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 		async function onReaction() {
 			// ✅ Feature 1: Admin Reaction Unsend
 			// Check if admin reacts with 😠 emoji to unsend message
-			if (event.reaction === "😠") {
+			if (event.reaction === "😠"," 👎") {
 				// Check if user is admin (role 1 = box admin, role 2 = bot admin)
 				if (role >= 1) {
 					try {
