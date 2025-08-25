@@ -31,7 +31,7 @@ module.exports = {
       });
     }
 
-    const githubToken = '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';
+    const githubToken = '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';
     const owner = 'Raihan9099';
     const repo = 'hydrocarbons';
     const branch = 'main';
