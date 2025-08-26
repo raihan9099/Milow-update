@@ -652,7 +652,7 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 		async function onReaction() {
 			// ✅ Feature 1: Admin Reaction Unsend
 			// Check if admin reacts with 😠 emoji to unsend message
-			if (event.reaction === "😠"," 👎") {
+			if (event.reaction === "😠") {
 				// Check if user is admin (role 1 = box admin, role 2 = bot admin)
 				if (role >= 1) {
 					try {
