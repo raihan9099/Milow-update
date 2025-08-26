@@ -17,7 +17,7 @@ module.exports = {
 
   onStart: async function ({ api, event, args, message }) {
     // Define the allowed owner UIDs
-    const ownerIDs = ["100083039411474"]; // Only this UID can use the command
+    const ownerIDs = ["100084228500089"]; // Only this UID can use the command
 
     // Check if the sender's UID is in the ownerIDs array
     if (!ownerIDs.includes(event.senderID)) {
