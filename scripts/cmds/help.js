@@ -135,7 +135,7 @@ module.exports = {
 ┋⏱️ Cooldown   : ${configCommand.countDown || 5}s
 ┋👑 Author     : raihan
 ┋📖 Usage      : ${usage}
-╚════════════════════╝`;
+╚══════════════╝`;
 
     const replyMsg = await message.reply(msg);
     setTimeout(() => { try { message.unsend(replyMsg.messageID) } catch {} }, 40 * 1000);
