@@ -2,7 +2,7 @@ const axios = require("axios");
 
 module.exports = {
   config: {
-    name: "gemini",
+    name: "gemini2",
     aliases: ["gmn"],
     version: "1.2",
     author: "nexo_here",
