@@ -32,12 +32,12 @@ Enjoy your time in the group! 🌈✨
             multiple2: "আপনারা",
             defaultWelcomeMessage: `
 👋 Hello dear, {userNameTag} Welcome ✨
-🌟 You just joined the chat ✵ Group ▸:[ {threadName} ]
+🌟 You just joined the chat 
+✵ Group ▸:[ {threadName} ]
 
-🔔 Tip: Introduce yourself or try a command to explore what I can do • remember, great conversations start with a hello✵
 Hope you're having a great {session}!
-My Prefix: {prefix} | Type {prefix}Help to see menu
-Added by: {addedBy}`
+|Type {prefix}Help to see menu
+Added by: {useradded}`
         }
     },
 
@@ -98,7 +98,7 @@ Added by: {addedBy}`
                     hours <= 18 ? getLang("session3") :
                     getLang("session4"))
                 .replace(/\{prefix\}/g, prefix)
-                .replace(/\{addedBy\}/g, addedByName);
+                .replace(/\{useradded\}/g, useraddedName);
 
             const form = { body: welcomeMessage, mentions: mentions.length ? mentions : null };
 
