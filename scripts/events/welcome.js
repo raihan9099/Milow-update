@@ -6,7 +6,7 @@ if (!global.temp.welcomeEvent)
 module.exports = {
     config: {
         name: "welcome",
-        version: "1.9",
+        version: "2.0",
         author: "Chitron Bhattacharjee",
         category: "events"
     },
@@ -32,11 +32,11 @@ Enjoy your time in the group! 🌈✨
             multiple2: "আপনারা",
             defaultWelcomeMessage: `
 👋 Hello dear, {userNameTag} Welcome ✨
-🌟 You just joined the chat ✵ Group ▸:
-[ {threadName} ]
-🤍 Hope you're having a great {session}!
+🌟 You just joined the chat ✵ Group ▸:[ {threadName} ]
+
 🔔 Tip: Introduce yourself or try a command to explore what I can do • remember, great conversations start with a hello✵
-| Type {prefix}Help to see menu
+Hope you're having a great {session}!
+My Prefix: {prefix} | Type {prefix}Help to see menu
 Added by: {addedBy}`
         }
     },
@@ -78,6 +78,13 @@ Added by: {addedBy}`
             }
             if (userName.length === 0) return;
 
+            // Get the user who added the new member(s)
+            let addedByName = "Unknown";
+            if (event.logMessageData.actorFbId) {
+                const info = await api.getUserInfo(event.logMessageData.actorFbId);
+                addedByName = info[event.logMessageData.actorFbId]?.name || "Unknown";
+            }
+
             let { welcomeMessage = getLang("defaultWelcomeMessage") } = threadData.data;
 
             welcomeMessage = welcomeMessage
@@ -90,7 +97,8 @@ Added by: {addedBy}`
                     hours <= 12 ? getLang("session2") :
                     hours <= 18 ? getLang("session3") :
                     getLang("session4"))
-                .replace(/\{prefix\}/g, prefix); // ✅ dynamic replacement
+                .replace(/\{prefix\}/g, prefix)
+                .replace(/\{addedBy\}/g, addedByName);
 
             const form = { body: welcomeMessage, mentions: mentions.length ? mentions : null };
 
