@@ -3,7 +3,7 @@ const regExCheckURL = /^(http|https):\/\/[^ "]+$/;
 
 module.exports = {
 	config: {
-		name: "uid2",
+		name: "uid",
 		version: "1.3",
 		author: "NTKhang",
 		countDown: 5,
