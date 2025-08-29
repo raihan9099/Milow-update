@@ -1,6 +1,6 @@
 const { GoatWrapper } = require("fca-liane-utils"); module.exports = {
   config: {
-    name: "uid2",
+    name: "uid",
     version: "1.0.0",
     permission: 0,
     credits: "XNIL",
