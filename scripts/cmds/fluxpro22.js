@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = {
   config: {
-    name: "fluxpro",
+    name: "Fluxpro2",
     aliases: [],
     version: "2.0",
     author: "nexo_here",
