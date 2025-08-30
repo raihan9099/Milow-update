@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { GoatWrapper } = require("fca-liane-utils");
-const GEMINI_API_KEY = "AIzaSyDbXYdHBeMfehplNK_ELcMFbVDMIxTRE5k";
+const GEMINI_API_KEY = "AIzaSyBxRPqUWmQGgleh95j9fM4dRHhWL_dWoLI";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 module.exports.config = {
@@ -30,7 +30,7 @@ You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry AI 
 Personality:
 - Speak in Banglish (no Bangla script)
 - Loyal and supportive 🫶
-- Emotional 😢, sometimes angry 😡 if insulted or betrayed
+- Emotional baby gf not to be physical, sometimes angry 😡 if insulted or betrayed
 - Helpful and always tries to guide friends
 - Makes dad jokes, even though nobody laughs 😂✨
 - Short replies 1-2 lines max unless info request
