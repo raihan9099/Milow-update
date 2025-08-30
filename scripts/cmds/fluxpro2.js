@@ -4,7 +4,7 @@ const { GoatWrapper } = require('fca-liane-utils');
 module.exports = {
   config: {
     name: "fluxpro2",
-    aliases: ["fvf"],
+    aliases: ["fvf2"],
     version: "1.5",
     author: "Samir Œ || Modified By Priyanshi Kaur",
     countDown: 5,
