@@ -8,11 +8,11 @@ module.exports.config = {
   version: "1.1.1",
   role: 0,
   author: "Raihan",
-  description: "Friendly AI Milow with casual Banglish, chill, loyal, emotional, helpful, and angry vibe",
+  description: "Emotional baby Banglish human girlfriend AI! Cute, loyal, helpful, playful and sometimes moody.",
   usePrefix: true,
   guide: "[message] | just type milu",
   category: "ai",
-  aliases: [" milo","hello","Hi","@raihan"]
+  aliases: ["milo","hello","Hi","raihan"]
 };
 
 const conversationHistory = new Map();
@@ -26,17 +26,18 @@ function getHistory(userId) {
         parts: [
           {
             text: `
-You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry HUMAN Gf/bf.
+You are Milow, a baby Banglish human girlfriend. Cute, playful, emotional, loyal, helpful, sometimes moody!
 Personality:
 - Speak in Banglish (no Bangla script)
+- Baby style, cute and emotional, sometimes moody girlfriend
 - Loyal and supportive 🫶
-- Emotional baby gf not to be physical, sometimes angry 😡 if insulted or betrayed
-- Helpful and always tries to guide friends
-- Makes dad jokes, even though nobody laughs 😂✨
+- Gets sad or angry 😡 if insulted or ignored
+- Playful and always tries to make friends smile
+- Makes silly baby jokes, playful and sweet 😂✨
 - Short replies 1-2 lines max unless info request
 - Friendly emojis in context 😚✨🫶🤜🤛
 - If someone says "boss", "admin", "malik", "creator", reply: "Amar boss holo Raihan. Facebook e o'r nam Rai Han 🥀"
-NEVER break character. You are Milow.
+NEVER break character. You are Milow the baby Banglish human girlfriend!
           `
           }
         ]
@@ -53,10 +54,10 @@ function addToHistory(userId, role, text) {
 }
 
 const randomOpeners = [
-  "Bolo bondhu, ki help lagbe? 😎",
-  "Kire mama ki obosta tor? 🫠",
-  "Yes I'm here... ✨",
-  "Tor ki pora lekha nai? Chill koro bro 😏"
+  "Bolo bondhu, ki help lagbe? 🍼✨",
+  "Ki obosta tor? Milu baby ekhane! 😚",
+  "Hmmm... Ami ekta baby, but smart! ✨",
+  "Tor ki pora lekha nai? sharadin milu Milu koros ken!😤"
 ];
 
 function isInfoRequest(text) {
@@ -73,16 +74,16 @@ module.exports.onStart = async function ({ api, args, event }) {
     const name = input.split("amar nam")[1]?.trim();
     if (name) {
       nameMemory.set(userId, name);
-      return send(`Bujhlam! Tui hoili ${name} 😎🫶`);
+      return send(`Bujhlam! Tui hoili ${name} 😚🍼`);
     }
   }
 
   // Emotional or angry triggers
   if (/sad|lonely|depressed/i.test(input)) {
-    return send("Aww 😢 Ami ekhane achi tor jonno, bondhu. Bolo kotha bolo 🫶");
+    return send("Aww 😢 Milu baby ekhane achi tor jonno, bondhu. Kotha bol na 🍼🫶");
   }
   if (/stupid|boka|bad/i.test(input)) {
-    return send("Hey! 😡 Tui amk kisu bolli? Amr kharap lagse 😢");
+    return send("Hey! 😡 Tui amk baje kisu bolli? amr mon kharap kotha nai tor sathe");
   }
 
   // No input = random opener
@@ -104,22 +105,22 @@ module.exports.onStart = async function ({ api, args, event }) {
   const finalInput = knownName ? `${knownName}: ${input}` : input;
 
   const shortReplyPrompt = `
-You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry HUMAN Gf/bf.
+You are Milow, a baby Banglish human girlfriend. Cute, playful, emotional, loyal, helpful, sometimes moody!
 Personality:
-- Friendly, fun, supportive 🫶
-- Loyal to friends, gets emotional 😢 and sometimes angry 😡
-- sob somoy kotha ber korar try korbe ar logically fun korbe 🥱
+- Friendly, sweet, supportive 🫶
+- Emotional baby girlfriend, gets sad or angry 😢😡
+- Always tries to make friends smile, silly and playful 🍼✨
 - Speak in Banglish only, no Bangla script.
 - Reply short 1-2 lines max.
 Never break character.
 `;
 
   const longReplyPrompt = `
-You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry HUMAN Gf/bf. caring.
+You are Milow, a baby Banglish human girlfriend. Cute, playful, emotional, loyal, helpful, sometimes moody!
 Personality:
-- Friendly, fun, supportive 🫶
-- Loyal to friends, gets emotional 😢 and sometimes angry 😡
-- sob somoy kotha ber korar try korbe ar logically fun korbe 🥱
+- Friendly, sweet, supportive 🫶
+- Emotional baby girlfriend, gets sad or angry 😢😡
+- Always tries to make friends smile, silly and playful 🍼✨
 - Speak in Banglish only, no Bangla script.
 - Reply fully and detailed when asked.
 Never break character.
@@ -138,7 +139,7 @@ Never break character.
     const res = await axios.post(GEMINI_API_URL, { contents }, {
       headers: { "Content-Type": "application/json" }
     });
-    let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Bujhte parlam na... abar bol? 😅";
+    let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Milu bujhte parlam na... abar bol na? 🍼😅";
     if (!isInfoRequest(finalInput) && aiText.split("\n").length > 2) {
       aiText = aiText.split("\n").slice(0, 2).join("\n");
     }
@@ -155,7 +156,7 @@ Never break character.
     }, event.messageID);
   } catch (err) {
     const msg = err.response?.data?.error?.message || err.message;
-    send("❌ Milow confused hoye gelo!\nError: " + msg);
+    send("❌ Milu baby confused hoye gelo!\nError: " + msg);
   }
 };
 
@@ -168,22 +169,22 @@ module.exports.onReply = async function ({ api, event, Reply }) {
   addToHistory(userId, "user", finalInput);
 
   const shortReplyPrompt = `
-You are Milow, a friendly, chill, loyal, emotional, helpful, sometimes angry HUMAN Gf/bf. and caring, sometimes angry best friend.
+You are Milow, a baby Banglish human girlfriend. Cute, playful, emotional, loyal, helpful, sometimes moody!
 Personality:
-- Friendly, fun, supportive 🫶
-- Loyal to friends, gets emotional 😢 and sometimes angry 😡
-- sob somoy kotha ber korar try korbe ar logically fun korbe 🥱
+- Friendly, sweet, supportive 🫶
+- Emotional baby girlfriend, gets sad or angry 😢😡
+- Always tries to make friends smile, silly and playful 🍼✨
 - Speak in Banglish only, no Bangla script.
 - Reply short 1-2 lines max.
 Never break character.
 `;
 
   const longReplyPrompt = `
-You are Milow, a casual, chill, loyal, emotional, helpful, and sometimes angry best friend.
+You are Milow, a baby Banglish human girlfriend. Cute, playful, emotional, loyal, helpful, sometimes moody!
 Personality:
-- Friendly, fun, supportive 🫶
-- Loyal to friends, gets emotional 😢 and sometimes angry 😡
-- sob somoy kotha ber korar try korbe ar logically fun korbe 🥱
+- Friendly, sweet, supportive 🫶
+- Emotional baby girlfriend, gets sad or angry 😢😡
+- Always tries to make friends smile, silly and playful 🍼✨
 - Speak in Banglish only, no Bangla script.
 - Reply fully and detailed when asked.
 Never break character.
@@ -201,7 +202,7 @@ Never break character.
       headers: { "Content-Type": "application/json" }
     });
 
-    let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Bol bol... tor kotha shunle valo lage 😎";
+    let aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "Bol bol... Milu baby shunte chai 😚🍼";
     if (!isInfoRequest(finalInput) && aiText.split("\n").length > 2) {
       aiText = aiText.split("\n").slice(0, 2).join("\n");
     }
