@@ -8,7 +8,7 @@ module.exports = {
         envConfig: {
             enable: true
         },
-        category: "events"
+        category: "event"
     },
 
     langs: {
