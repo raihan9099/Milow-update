@@ -78,10 +78,10 @@ const s = async (t, u, v, w, x = false) => {
 
 module.exports = {
   config: {
-    name: 'ai',
+    name: 'ai4',
     aliases: [],
     version: '1.0.0',
-    author: 'Aryan Chauhan',
+    author: 'Aryan',
     role: 0,
     category: 'ai',
     longDescription: { en: 'AI chat, image gen, music/video, and reset' },
