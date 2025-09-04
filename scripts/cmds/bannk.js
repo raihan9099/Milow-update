@@ -30,7 +30,7 @@ try {
   console.log("Custom font not found or failed to load. Using system default 'Arial'.");
 }
 
-const mongoUri = "mongodb+srv://Easirmahi:01200120mahi@anchestor.wmvrhcb.mongodb.net";
+const mongoUri = "mongodb+srv://shipuaimirai:chitron%402448766@shipuaimiraibot.nwesgqa.mongodb.net";
 const DB_NAME = "GoatBotV2_AdvBank";
 const BANK_COLLECTION = "advBankData";
 const MARKET_COLLECTION = "advMarketListings";
